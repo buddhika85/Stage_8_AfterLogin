@@ -1,0 +1,366 @@
+﻿<div>
+    <h4>{{vm.title}}</h4>
+    <br />
+    
+
+    <!-- panel for - Create user-->
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+
+            <fieldset>
+                <legend style="font-size:medium;" class="panel-heading" id="newUserHeaderPanel">Create a new user</legend>
+                <div id="newUserInputSection">
+                    <div class="form-group row">
+                        <!--username-->
+                        <label for="username" class="control-label col-md-2 fontWeightNormal">Username</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="email" id="username" class="col-md-10" ng-model="vm.usernameCreate" ng-class="vm.usernameCreateClass" />
+                        </div>
+
+                        <!--role-->
+                        <label for="selectRole" class="control-label col-md-2 fontWeightNormal">User role</label>
+                        <div class="col-md-4">
+                            <select id="selectRole" class="col-md-10" multiple ng-model="vm.rolesInCreate" ng-class="vm.rolesInCreateClass">
+                                <option ng-repeat="role in vm.roles" value="{{role.name}}">{{role.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        
+                        <!--first name-->
+                        <label for="firstName" class="control-label col-md-2 fontWeightNormal">First name</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="first name" id="firstName" class="col-md-10" ng-model="vm.firstNameCreate" ng-class="vm.firstNameCreateClass" />
+                        </div>
+                        <!--last name-->
+                        <label for="lastName" class="control-label col-md-2 fontWeightNormal">Last name</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="last name" id="lastName" class="col-md-10" ng-model="vm.lastNameCreate" ng-class="vm.lastNameCreateClass" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--position-->
+                        <label for="position" class="control-label col-md-2 fontWeightNormal">Position</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="position" id="position" class="col-md-10" ng-model="vm.positionCreate" ng-class="vm.positionCreateClass" />
+                        </div>
+                        
+                        <div class="col-md-6">                            
+                        </div>                        
+                    </div>
+                    <div class="form-group row">
+
+                        <!--Direct dial-->
+                        <label for="telephoneN" class="control-label col-md-2 fontWeightNormal">Telephone</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="Direct dial" id="telephoneN" class="col-md-10" ng-model="vm.telephoneCreate" ng-class="vm.telephoneCreateClass" />
+                        </div>
+
+                        <!--extension-->
+                        <label for="extension" class="control-label col-md-2 fontWeightNormal">Ext</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="extension" id="extension" class="col-md-10" ng-model="vm.extensionCreate" onkeypress="return isNumberKey(event)" maxlength="5" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--employment date-->
+                        <label for="empDate" class="control-label col-md-2 fontWeightNormal">Employment date</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="employement date" id="empDate" class="col-md-10" ng-model="vm.empDateCreate" ng-class="vm.empDateCreateClass" />
+                        </div>
+                        <!--registration date-->
+                        <label for="regDate" class="control-label col-md-2 fontWeightNormal">Registration date</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="registration date" id="regDate" class="col-md-10" ng-model="vm.regDateCreate" ng-class="vm.regDateCreateClass" />
+                        </div>
+                    </div>
+                    <div class="form-group row">  
+                    </div>
+                    <div class="form-group row">                                                
+                        
+                        <!--error message -->
+                        <div class="col-md-8">
+                            <label class="control-label fontWeightNormal" style="color:red"> {{vm.errorMessageCreate}}</label>
+                        </div>
+                        <!--buttons -->
+                        <div class="col-md-4">                            
+                            <div class="col-md-5" style="padding-left:0">
+                                <button class="col-md-12 fontWeightNormal btn-primary" ng-click="vm.createUser()" id="btnSearchOrders">Create user</button>
+                            </div>
+                            <!--<div class="col-md-1">
+                            </div>-->
+                            <div class="col-md-5" style="padding-right:0">
+                                <button class="col-md-12 fontWeightNormal" ng-click="vm.resetCreateForm()" id="btnResetSearch">Reset form</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+    <!-- end panel for - create user-->
+
+    <!-- panel for - Search users-->
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+
+            <fieldset>
+                <legend style="font-size:medium;" class="panel-heading" id="searchHeaderPanel">Search and then Edit/Delete user</legend>
+                <div id="searchUserInputSection">
+                    <div class="form-group row">
+                        <!--username-->
+                        <label for="usernameE" class="control-label col-md-2 fontWeightNormal">Username</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="email" id="usernameE" class="col-md-10" ng-model="vm.usernameE" />
+                        </div>
+
+                        <!--role-->
+                        <label for="selectRoleE" class="control-label col-md-2 fontWeightNormal">User role</label>
+                        <div class="col-md-4">
+                            <select id="selectRoleE" class="col-md-10" multiple ng-model="vm.rolesInSearch">
+                                <option ng-repeat="role in vm.roles" value="{{role.name}}">{{role.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--first name-->
+                        <label for="firstNameE" class="control-label col-md-2 fontWeightNormal">First name</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="first name" id="firstNameE" class="col-md-10" ng-model="vm.firstNameE" />
+                        </div>
+                        <!--last name-->
+                        <label for="lastNameE" class="control-label col-md-2 fontWeightNormal">Last name</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="last name" id="lastNameE" class="col-md-10" ng-model="vm.lastNameE" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--position-->
+                        <label for="positionE" class="control-label col-md-2 fontWeightNormal">Position</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="position" id="positionE" class="col-md-10" ng-model="vm.positionE" />
+                        </div>
+
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--employment date-->
+                        <label for="empDateE" class="control-label col-md-2 fontWeightNormal">Employment date</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="employement date" id="empDateE" class="col-md-10" ng-model="vm.empDateE" />
+                        </div>
+                        <!--registration date-->
+                        <label for="regDateE" class="control-label col-md-2 fontWeightNormal">Registration date</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="registration date" id="regDateE" class="col-md-10" ng-model="vm.regDateE" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+
+                        <!--last login date-->
+                        <label for="lastLoginDateE" class="control-label col-md-2 fontWeightNormal">Last login date &amp time</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="last login date" id="lastLoginDateE" class="col-md-10" ng-model="vm.lastLoginDateE" />
+                        </div>
+                        <!--last invalid login date-->
+                        <label for="lastInvalidDateE" class="control-label col-md-2 fontWeightNormal">Last invalid login date &amp time</label>
+                        <div class="col-md-4">
+                            <input type="text" placeholder="last invalid login date" id="lastInvalidDateE" class="col-md-10" ng-model="vm.lastInvalidDateE" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                    </div>
+                    <div class="form-group row">
+
+                        <!--error message -->
+                        <div class="col-md-8">
+                            <label class="control-label fontWeightNormal" style="color:red"> {{vm.errorMessageSearch}}</label>
+                        </div>
+                        <!--buttons -->
+                        <div class="col-md-4">
+                            <div class="col-md-5" style="padding-left:0">
+                                <button class="col-md-12 fontWeightNormal btn-default" ng-click="vm.searchUsers()" id="btnSearchOrders">Search users</button>
+                            </div>
+                            <!--<div class="col-md-1">
+                            </div>-->
+                            <div class="col-md-5" style="padding-right:0">
+                                <button class="col-md-12 fontWeightNormal" ng-click="vm.resetSearchForm()" id="btnResetSearch">Reset form</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+    <!-- end panel for - create user-->
+
+    <!-- panel for - Search result of users - users grid -->
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+
+            <fieldset>
+                <legend style="font-size:medium;" class="panel-heading" id="searchResultHeaderPanel">Users</legend>
+                <div id="searchResultsSection">
+                    <!--empty raw-->
+                    <div class="row">
+                        <div class="col-md-12" style="padding:5px">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div id="searchResultSection">
+                            <!--<div class="col-md-1"></div>-->
+
+                            <div class="col-md-12" style="padding:0% 5% 0% 5%">
+                                <div class="row table-responsive">
+                                    <!--JS Data table -->
+                                    <table cellpadding="0" cellspacing="0" border="0" class="display table-bordered" id="usersGrid"></table>
+                                </div>
+                            </div>
+
+                            <!--<div class="col-md-1"></div>-->
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <!-- End panel for - Search result users - users grid -->
+
+
+    <!-- Modal to insert/edit/view info-->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalTitle">{{vm.popupTitle}}</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <!--username and position-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="username" class="control-label col-md-2 fontWeightNormal">Username</label>
+                        <div class="col-md-4">
+                            <input type="text" id="username" ng-model="vm.username" placeholder="unique role name" ng-class="vm.userNameClass" ng-disabled="vm.usernameDisabled" />
+                        </div>
+                        <label for="position" class="control-label col-md-2 fontWeightNormal">Position</label>
+                        <div class="col-md-4">
+                            <input type="text" id="position" ng-model="vm.position" placeholder="user position" ng-class="vm.positionClass" ng-disabled="vm.positionDisabled" />
+                        </div>
+                    </div>
+
+                    <!--first name and lastname-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="firstname" class="control-label col-md-2 fontWeightNormal">First name</label>
+                        <div class="col-md-4">
+                            <input type="text" id="firstname" ng-model="vm.firstname" placeholder="first name of the user" ng-class="vm.firstNameClass" ng-disabled="vm.firstNameDisabled" />
+                        </div>
+                        <label for="lastName" class="control-label col-md-2 fontWeightNormal">Last name</label>
+                        <div class="col-md-4">
+                            <input type="text" id="lastName" ng-model="vm.lastname" placeholder="surname of the user" ng-class="vm.lastNameClass" ng-disabled="vm.lastNameDisabled" />
+                        </div>
+                    </div>
+
+                    <!--telephone and extension-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="telephone" class="control-label col-md-2 fontWeightNormal">Telephone</label>
+                        <div class="col-md-4">
+                            <input type="text" id="telephone" ng-model="vm.telephone" placeholder="telephone number" ng-class="vm.telephoneClass" ng-disabled="vm.telephoneDisabled" />
+                        </div>
+                        <label for="ext" class="control-label col-md-2 fontWeightNormal">Extension</label>
+                        <div class="col-md-4">
+                            <input type="text" id="ext" ng-model="vm.extension" placeholder="telephone extension" ng-class="vm.extensionClass" ng-disabled="vm.extensionDisabled" onkeypress="return isNumberKey(event)" maxlength="5" />
+                        </div>
+                    </div>
+
+                    <!--roles of the user and locked or not-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="roles" class="control-label col-md-2 fontWeightNormal">User roles</label>
+                        <div class="col-md-4">
+                            <select id="roles" ng-class="vm.rolesClass" ng-disabled="vm.rolesDisabled" multiple ng-model="vm.rolesInPopup">
+                                <option ng-repeat="role in vm.roles" value="{{role.name}}">{{role.name}}</option>
+                            </select>  
+                        </div>
+                        <label for="locked" class="control-label col-md-2 fontWeightNormal">Locked</label>
+                        <div class="col-md-4">
+                            <select id="locked" ng-model="vm.locked" ng-class="vm.lockedClass" ng-disabled="vm.lockedDisabled">
+                                <option value='No'>No</option>
+                                <option value='Yes'>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--employment date and registration date-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="empDateP" class="control-label col-md-2 fontWeightNormal">Employment date</label>
+                        <div class="col-md-4">
+                            <input type="text" id="empDateP" ng-model="vm.employmentDate" placeholder="employment date" ng-class="vm.empDateClass" ng-disabled="vm.empDateDisabled" />
+                        </div>
+                        <label for="regDateP" class="control-label col-md-2 fontWeightNormal">Registration date</label>
+                        <div class="col-md-4">
+                            <input type="text" id="regDateP" ng-model="vm.registrationDate" placeholder="registration date" ng-class="vm.regDateClass" ng-disabled="vm.regDateDisabled" />
+                        </div>                        
+                    </div>
+
+                    <!--last login time and last logout time-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="loginDtP" class="control-label col-md-2 fontWeightNormal">Last login date/time</label>
+                        <div class="col-md-4">
+                            <input type="text" id="loginDtP" ng-model="vm.loginDateTime" placeholder="last login date time" ng-class="vm.loginDtP" ng-disabled="vm.loginDtPDisabled" />
+                        </div>
+                        <label for="logoutDtP" class="control-label col-md-2 fontWeightNormal">Last logout date/time</label>
+                        <div class="col-md-4">
+                            <input type="text" id="logoutDtP" ng-model="vm.logoutDateTime" placeholder="last logout date time" ng-class="vm.logoutDtPClass" ng-disabled="vm.logoutDtPeDisabled" />
+                        </div>
+                    </div>
+
+                    <!--invalid login attempt count and last invalid login attempt datetime-->
+                    <div class="row formRawPaddingCustom">
+                        <label for="invalidLoginAttCount" class="control-label col-md-2 fontWeightNormal">Invalid login count</label>
+                        <div class="col-md-4">
+                            <input type="text" id="invalidLoginAttCount" ng-model="vm.invalidLoginAttemptCount" placeholder="invalid login attempt count" ng-class="vm.invalidLoginAttCount" ng-disabled="vm.invalidLoginAttCountDisabled" />
+                        </div>
+                        <label for="invalidLoginDtP" class="control-label col-md-2 fontWeightNormal">Last invalid login date/time</label>
+                        <div class="col-md-4">
+                            <input type="text" id="invalidLoginDtP" ng-model="vm.invalidLoginDtP" placeholder="last invalid login date time" ng-class="vm.invalidLoginDtPClass" ng-disabled="vm.invalidLoginDtPDisabled" />
+                        </div>
+                    </div>
+                    
+                    <!-- error message section -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label fontWeightNormal" style="color:red"> {{vm.errorMessagePopup}}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btnSave" type="button" class="btn-sm btn-primary" ng-click='vm.saveUserEdit()' ng-disabled="vm.saveBtnPopupDisabled">Save</button>
+                    <button id="btnCancel" type="button" class="btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--End modal popup-->
+
+</div>
