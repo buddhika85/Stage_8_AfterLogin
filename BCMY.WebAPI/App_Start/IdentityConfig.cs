@@ -124,7 +124,7 @@ namespace BCMY.WebAPI
                         userManager.AddToRole(item.Id, "Director");
                     }
                     else {
-                        userManager.AddToRole(item.Id, "Executive");
+                        userManager.AddToRole(item.Id, "Executive-Sales");
                     }
                 }
             }
@@ -239,15 +239,15 @@ namespace BCMY.WebAPI
                        Description = "Highest Privilage User Role - Level 1"
                     },
                     new ApplicationRole() {
-                       Name = "Management",
+                       Name = "Management-Sales",
                        Description = "Second Highest Privilage User Role - Level 2"
                     },
                     new ApplicationRole() {
-                       Name = "Executive",
+                       Name = "Executive-Sales",
                        Description = "Third Highest Privilage User Role - Level 3"
                     },
                     new ApplicationRole() {
-                       Name = "Support",
+                       Name = "Support-Sales",
                        Description = "Fourth Privilage User Role - Level 4"
                     }
                 };
