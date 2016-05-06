@@ -202,8 +202,7 @@
     // used to edit a role
     function editRole(vm, record)
     {
-        //alert("Edit Role : " + record.name);
-        
+        //alert("Edit Role : " + record.name);        
         vm = defineModelForEditRole(vm, record);
         vm.scope.$evalAsync(); //$apply();
 
