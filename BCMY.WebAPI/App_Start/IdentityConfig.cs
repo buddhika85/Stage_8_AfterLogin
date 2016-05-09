@@ -236,20 +236,64 @@ namespace BCMY.WebAPI
                 IList<ApplicationRole> roles = new List<ApplicationRole>() { 
                     new ApplicationRole() {
                        Name = "Director",
-                       Description = "Highest Privilage User Role - Level 1"
+                       Description = "Highest Privilage User Role - All the levels"
                     },
                     new ApplicationRole() {
                        Name = "Management-Sales",
-                       Description = "Second Highest Privilage User Role - Level 2"
+                       Description = "Second Highest Privilage User Role - Sales Level"
                     },
                     new ApplicationRole() {
                        Name = "Executive-Sales",
-                       Description = "Third Highest Privilage User Role - Level 3"
+                       Description = "Third Highest Privilage User Role - Sales Level"
                     },
                     new ApplicationRole() {
-                       Name = "Support-Sales",
-                       Description = "Fourth Privilage User Role - Level 4"
-                    }
+                       Name = "Administrator-Sales",
+                       Description = "Fourth Privilage User Role - Sales Level"
+                    },                    
+                    new ApplicationRole() {
+                       Name = "Management-Purchase",
+                       Description = "Second Highest Privilage User Role - Purchase Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Executive-Purchase",
+                       Description = "Third Highest Privilage User Role - Purchase Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Administrator-Purchase",
+                       Description = "Fourth Privilage User Role - Purchase Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Management-Production",
+                       Description = "Second Highest Privilage User Role - Production Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Executive-Production",
+                       Description = "Third Highest Privilage User Role - Production Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Administrator-Production",
+                       Description = "Fourth Privilage User Role - Production Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Management-Finance",
+                       Description = "Second Highest Privilage User Role - Finance Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Executive-Finance",
+                       Description = "Third Highest Privilage User Role - Finance Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Administrator-Finance",
+                       Description = "Fourth Privilage User Role - Finance Level"
+                    }, 
+                    new ApplicationRole() {
+                       Name = "Management-HR",
+                       Description = "Second Highest Privilage User Role - HR Level"
+                    },
+                    new ApplicationRole() {
+                       Name = "Management-Marketing",
+                       Description = "Second Highest Privilage User Role - Marketing Level"
+                    },
                 };
 
                 InsertRoles(roleManager, roles);
