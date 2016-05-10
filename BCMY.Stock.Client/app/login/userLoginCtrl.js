@@ -96,46 +96,76 @@
                 localStorage["access_token"] = data.access_token;
                 localStorage["expires_in"] = data.expires_in;
 
-                // write credential cookie                
-                if (vm.rememberMe) { 
-                    var dataForBody = "value=" + vm.password;
-                    var serverUrl = ('https://localhost:44302/api/EncryptValue?' + dataForBody);
-                    var messageHeadersForEnc = {
-                        'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
-                    };
-                    vm.httpService({
-                        method: "post",
-                        headers: messageHeadersForEnc ,
-                        url: serverUrl
-                    }).success(function (data) {                        
-                        if (data != null) {
-                            vm.encryptedPassword = data;
-                            writeRememberMeCookie(vm);
+                var messageHeadersForEnc = {
+                    'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+                };
+                var dataForBody = "username=" + localStorage["userName"];
+                var serverUrl = ('https://localhost:44302/api/GetRolesListByUsernameAsync?' + dataForBody);
+
+                // get user roles
+                vm.httpService({
+                    method: "post",
+                    headers: messageHeadersForEnc,
+                    url: serverUrl
+                }).success(function (data) {
+                    if (data != null) {                                                
+                        localStorage["userRolesList"] = data;                        
+                        // write credential cookie                
+                        if (vm.rememberMe) {
+                            dataForBody = "value=" + vm.password;
+                            serverUrl = ('https://localhost:44302/api/EncryptValue?' + dataForBody);
+                            vm.httpService({
+                                method: "post",
+                                headers: messageHeadersForEnc,
+                                url: serverUrl
+                            }).success(function (data) {
+                                if (data != null) {
+                                    vm.encryptedPassword = data;
+                                    writeRememberMeCookie(vm);
+                                    // navigate to dashboard view               
+                                    window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
+                                    window.location.reload();
+                                }
+                                else {
+                                    debugger
+                                    toastr.warning("Error - remember me option is not working, please contact IT");
+                                    // navigate to dashboard view               
+                                    //window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
+                                    //window.location.reload();
+                                }
+                            }
+                            ).error(function (data) {
+                                debugger
+                                toastr.error("Error - remember me option is not working, please contact IT");
+                                // navigate to dashboard view               
+                                //window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
+                                //window.location.reload();
+                            });
+                        }
+                        else {
                             // navigate to dashboard view               
                             window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
                             window.location.reload();
                         }
-                        else {
-                            debugger
-                            toastr.warning("Error - remember me option is not working, please contact IT");
-                            // navigate to dashboard view               
-                            //window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
-                            //window.location.reload();
-                        }
                     }
-                    ).error(function (data) {
+                    else {
                         debugger
-                        toastr.error("Error - remember me option is not working, please contact IT");
+                        toastr.warning("Error - remember me option is not working, please contact IT");
                         // navigate to dashboard view               
                         //window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
                         //window.location.reload();
-                    }); 
+                    }
                 }
-                else {
+                ).error(function (data) {
+                    debugger
+                    toastr.error("Error - remember me option is not working, please contact IT");
                     // navigate to dashboard view               
-                    window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
-                    window.location.reload();
-                }
+                    //window.location = window.location.protocol + "//" + window.location.host + "/#/dashboard";
+                    //window.location.reload();
+                });
+
+
+                
 
                 //alert(data.access_token);
                     

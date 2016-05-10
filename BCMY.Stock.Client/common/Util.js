@@ -271,8 +271,21 @@
     function EnableTopNavigationBar() {
         //$('#topNavigationBar').find('a').prop('disabled', false);
         //$('#topNavigationBar a').unbind("click");
-        //$('#topNavigationBar').css("visibility", "visible");
+        //$('#topNavigationBar').css("visibility", "visible");       
         $('#topNavigationBar').css("visibility", "visible");
+        DisableLinksByRole();
     }
-   
+    
+    // disable links by user roles
+    function DisableLinksByRole()
+    {
+        debugger
+        //if ($.trim(localStorage["userRolesList"]) == 'management-hr') {
+        //vm.hideAmendStockNav = true;
+        //$('#amendStock').css("visibility", "hidden");        
+        //}
+        $("#amendStock").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'management-hr');
+    }
+
+        
 //}());

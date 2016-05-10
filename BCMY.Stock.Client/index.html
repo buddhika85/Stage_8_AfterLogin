@@ -75,7 +75,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administration <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a ui-sref="amendStock">Amend Stock</a></li>
+                            <li ng-hide="{{vm.hideAmendStockNav}}"><a ui-sref="amendStock" id="amendStock">Amend Stock</a></li>
                             <li><a ui-sref="roleManagement">Role management</a></li>
                             <li><a ui-sref="userManagement">User management</a></li>
                         </ul>

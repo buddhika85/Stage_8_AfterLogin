@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;           // to get OWIN context
 
 namespace BCMY.WebAPI.Controllers.admin
@@ -21,10 +22,12 @@ namespace BCMY.WebAPI.Controllers.admin
     public class RoleController : ApiController
     {
         ApplicationRoleManager roleManager = null;
+        ApplicationUserManager userManager = null;
 
         public RoleController ()
 	    {            
-            roleManager = HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>();           
+            roleManager = HttpContext.Current.GetOwinContext().Get<ApplicationRoleManager>();
+            userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
 	    }
 
         // used to retreive all the user roles
@@ -133,6 +136,23 @@ namespace BCMY.WebAPI.Controllers.admin
                 message = string.Format("Error : Exception occured at deleting role {0}", ex.Message);
             }
             return message;
+        }
+
+        // provides all the user roles of the user by username
+        [HttpPost, Route("api/GetRolesListByUsernameAsync")]
+        public async Task<IList<string>> GetRolesListByUsernameAsync(string username)
+        {
+            IList<string> roles = null;
+            try
+            {
+                roles = await userManager.GetRolesAsync(userManager.FindByEmail(username).Id);
+                roles = roles.Select(r => r.ToLower()).ToList<string>();
+            }
+            catch (Exception ex)
+            {
+                roles[0] = string.Format("Error - user does not have any roles - {0}", ex.Message);
+            }
+            return roles;
         }
     }
 }

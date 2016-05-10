@@ -7,13 +7,16 @@
 
     function amendStockCtrl($http, blockUI, loginValidatorService)                   // controller funcion
     {        
-        var vm = this;
+        var vm = this;        
         if (loginValidatorService.loginValidator()) {
             EnableTopNavigationBar();
             $("#loggedInUserWithTime").text(localStorage["userName"]);
             vm = defineModel(vm, $http, blockUI);
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             prepareInitialUI(vm);
-            wireCommands(vm);
+            wireCommands(vm);            
         }
         else {
             localStorage["userName"] = null;
@@ -57,7 +60,7 @@
     function populateCategoryDropDown(vm) {
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/productinfo/getcategories?getcategories=true'),
         }).success(function (data) {
             var listitems = '<option value=-1 selected="selected">---- Select Category ----</option>';
@@ -122,7 +125,7 @@
         var serverUrl = 'https://localhost:44302/api/ProductInfo?productId=' + vm.productListId + '&quantity=' + vm.stockCount;
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl,
         }).success(function (data) {
             //debugger
@@ -210,7 +213,7 @@
         var serverUrl = 'https://localhost:44302/api/ProductInfo?productlistId=' + modelId;
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             
@@ -260,7 +263,7 @@
         
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/productinfo?withAmendData=true'),
         }).success(function (data) {            
             vm.tableRecords = data;
@@ -343,7 +346,7 @@
             // populate dependant DDL - condition
             vm.httpService({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: ('https://localhost:44302/api/productinfo/categoryId?categoryId=' + selectedCategory),
             }).success(function (data) {
                 //alert(data.length);
@@ -380,7 +383,7 @@
         if (selectedCondition != -1 && selectedCategory != -1) {
             vm.httpService({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl,
             }).success(function (data) {
                 //alert(data.length);                
@@ -417,7 +420,7 @@
         if (selectedBrands != -1 && selectedCondition != -1 && selectedCategory != -1) {
             vm.httpService({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl,
             }).success(function (data) {
                 //alert(data.length);

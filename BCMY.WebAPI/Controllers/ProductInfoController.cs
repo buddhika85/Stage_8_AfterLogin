@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models;
 using BCMY.WebAPI.Models.UnityDI;
 using DataAccess_EF.EntityFramework;
 using DataAccess_EF.ViewModels;
@@ -20,6 +21,7 @@ namespace BCMY.WebAPI.Controllers
     /// This controller deals with product informationrelated data retrieval from [BCMY] external database
     /// </summary>
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class ProductInfoController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -202,6 +204,11 @@ namespace BCMY.WebAPI.Controllers
         // Returns all conditions by condition Id
         // http://localhost:61945/api/productinfo/
         [HttpGet, ActionName("SearchProducts")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         public IEnumerable<ProductInfoViewModel> SearchProducts(int categoryId, int? conditionId, string brandIds, string modelIds)
         {            
             try
@@ -226,6 +233,11 @@ namespace BCMY.WebAPI.Controllers
         // Returns all conditions by condition Id
         // http://localhost:61945/api/ProductInfo?productlistId=100003
         [HttpGet, ActionName("SearchProducts")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         public ProductInfoViewModel GetProductInfoVmById(int productlistId)
         {
             try
@@ -245,6 +257,11 @@ namespace BCMY.WebAPI.Controllers
 
         // Returns all the products with stock counts and amended info
         [HttpGet, ActionName("GetProductStockInfo")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," + 
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," + 
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," + 
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," + 
+            CustomRoles.ManagementMarketing)]
         public IEnumerable<ProductInfoViewModel> GetProductStockInfo(bool withAmendData)
         {
             try
