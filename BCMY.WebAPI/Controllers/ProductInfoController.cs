@@ -281,6 +281,7 @@ namespace BCMY.WebAPI.Controllers
 
         // updates stock count and returns status
         [HttpGet, ActionName("UpdateStockCount")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction)]
         public bool UpdateStockCount(int productId, int quantity)
         {
             bool status = false;
@@ -296,7 +297,7 @@ namespace BCMY.WebAPI.Controllers
             }
             catch (Exception)
             {
-                status = false; ;
+                status = false;
             }
             return status;
         }

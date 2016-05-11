@@ -87,5 +87,11 @@
    cursor: default;
    background-color:lightgray;
 }
+
+.buttonNotActive {
+   pointer-events: none;
+   cursor: default;
+}
+
 /*.productInfo {
 }*/

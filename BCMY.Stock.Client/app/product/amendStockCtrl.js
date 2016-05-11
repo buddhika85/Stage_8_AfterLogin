@@ -16,7 +16,8 @@
                 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
             };
             prepareInitialUI(vm);
-            wireCommands(vm);            
+            wireCommands(vm);
+            authoriseButtonAccess(vm);
         }
         else {
             localStorage["userName"] = null;
@@ -115,6 +116,30 @@
                 DisplayErrorMessage('Error : You should provide a stock count', $('#lblErrorMessagePopup')); 
             }
             vm.blockUI.stop();
+        }
+    }
+
+    // authorise button access based on user roles
+    function authoriseButtonAccess(vm) {
+        debugger
+        // disable amend stock form all grid buttons
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-production') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-production') > -1) {
+            vm.amendStockBtnDisabled = false;
+            vm.selectModelDisabled = false
+            vm.selectBrandDisabled = false;
+            vm.resetSearchBtnDisabled = false;
+            vm.selectConditionDisabled = false;
+            vm.selectCategoryDisabled = false;            
+        }
+        else {
+            vm.amendStockBtnDisabled = true;
+            vm.selectModelDisabled = true;
+            vm.selectBrandDisabled = true;
+            vm.resetSearchBtnDisabled = true;
+            vm.selectConditionDisabled = true;
+            vm.selectCategoryDisabled = true;            
         }
     }
 
@@ -306,7 +331,20 @@
                         },
                         "aTargets": [0]
                     },
-                    { "sTitle": "Amend count", "defaultContent": "<button class='productInfo'>Amend</button>" }
+                    //{ "sTitle": "Amend count", "defaultContent": "<button class='productInfo'>Amend</button>" }
+                    {
+                        "sTitle": "Amend count", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                   $.trim(localStorage["userRolesList"]).indexOf('management-production') > -1 ||
+                                   $.trim(localStorage["userRolesList"]).indexOf('executive-production') > -1) {
+                                return "<button class='productInfo'>Amend</button>";
+                            }
+                            else {
+                                return "<button class='productInfo' disabled>Amend</button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    }
             ],
             "bDestroy": true,
             //"aLengthMenu": [[15, 50, 100, 200, -1], [15, 50, 100, 200, "All"]],
@@ -323,6 +361,23 @@
             //alert("View Info : " + data.productlistId + " - " + data.model);     
             amendStockCount(vm, data.productlistId);
         });
+
+        //authoriseGridButtonAccess(vm);
+    }
+
+    // used to enable/disable grid buttons based on user role
+    function authoriseGridButtonAccess(vm)
+    {
+        debugger
+        // disable amend stock form all grid buttons
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-production') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-production') > -1) {            
+            $(".productInfo").css({ "pointer-events": "visiblePainted", 'cursor': 'default', 'opacity': '0' });
+        }
+        else {            
+            $(".productInfo").css({ "pointer-events": "none", 'cursor': 'default', 'opacity': '0.65' });
+        }
     }
 
     // Destroy the product data grid

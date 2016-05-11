@@ -26,7 +26,7 @@
                         <!--category selection-->
                         <label for="selectCategory" class="control-label col-md-1 fontWeightNormal">Category</label>
                         <div class="col-md-4">
-                            <select id="selectCategory">
+                            <select id="selectCategory" ng-disabled="{{vm.selectCategoryDisabled}}">
                                 <option>---- Select Category ----</option>
                             </select>
                         </div>
@@ -34,13 +34,13 @@
                         <!--condition selection-->
                         <label for="selectCondition" class="control-label col-md-1 fontWeightNormal">Condition</label>
                         <div class="col-md-4">
-                            <select id="selectCondition">
+                            <select id="selectCondition" ng-disabled="{{vm.selectConditionDisabled}}">
                                 <option>---- Select Condition ----</option>
                             </select>
                         </div>
 
                         <div class="col-md-2">
-                            <button class="col-md-12 fontWeightNormal" ng-click="vm.resetSearch()" id="resetBtn">Reset Search</button>
+                            <button class="col-md-12 fontWeightNormal" ng-click="vm.resetSearch()" id="resetBtn" ng-disabled="{{vm.resetSearchBtnDisabled}}">Reset Search</button>
                         </div>
                     </div>
 
@@ -49,7 +49,7 @@
                         <!--brand selection-->
                         <label for="selectBrand" class="control-label col-md-1 fontWeightNormal">Brand</label>
                         <div class="col-md-4">
-                            <select id="selectBrand">
+                            <select id="selectBrand" ng-disabled="{{vm.selectBrandDisabled}}">
                                 <option>---- Select Brand ----</option>
                             </select>
                         </div>
@@ -57,13 +57,14 @@
                         <!--model selection-->
                         <label for="selectModel" class="control-label col-md-1 fontWeightNormal">Model</label>
                         <div class="col-md-4">
-                            <select id="selectModel">
+                            <select id="selectModel" ng-disabled="{{vm.selectModelDisabled}}">
                                 <option>---- Select Model ----</option>
                             </select>
                         </div>
 
                         <div class="col-md-2">
-                            <button class="col-md-12 fontWeightNormal" ng-click="vm.amendStock()" id="btnSearchProducts">Amend Stock</button>
+                            <button class="col-md-12 fontWeightNormal" ng-click="vm.amendStock()" id="btnSearchProducts"
+                                    ng-disabled="{{vm.amendStockBtnDisabled}}">Amend Stock</button>
                         </div>
                     </div>
 
