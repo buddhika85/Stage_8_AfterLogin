@@ -11,7 +11,10 @@
         if (loginValidatorService.loginValidator()) {
             EnableTopNavigationBar();
             $("#loggedInUserWithTime").text(localStorage["userName"]);
-            vm = defineModel(vm, $http, $scope, blockUI);
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
+            vm = defineModel(vm, $http, $scope, blockUI);            
             prepareInitialUI(vm);
             wireCommands(vm);
         }
@@ -35,7 +38,7 @@
         // for the roles drop downs
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/role'),
         }).success(function (data) {            
             vm.roles = data;
@@ -152,7 +155,7 @@
         var users = null;
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/user'),
         }).success(function (data) {
             
@@ -348,7 +351,7 @@
         var serverUrl = ('https://localhost:44302/api/LockUnlockUserAsync?' + dataForBody);
         vm.httpService({
             method: "post",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl,
         }).success(function (data) {
             //alert(data);

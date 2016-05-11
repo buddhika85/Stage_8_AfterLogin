@@ -18,7 +18,7 @@ namespace BCMY.WebAPI.Controllers.admin
     /// Used to expose chart related data
     /// </summary>
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
-    //[Authorize]
+    [Authorize]
     public class RoleController : ApiController
     {
         ApplicationRoleManager roleManager = null;
@@ -31,7 +31,11 @@ namespace BCMY.WebAPI.Controllers.admin
 	    }
 
         // used to retreive all the user roles
-        //[Authorize(Roles = "Director")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         public IQueryable<ApplicationRole> Get()
         {
             IQueryable<ApplicationRole> roles = null;
@@ -47,7 +51,7 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // used to create a user role
-        //[Authorize(Roles = "Director")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/CreateRoleAsync")]
         public async Task<string> CreateRoleAsync(string roleName, string desc)
         {
@@ -76,7 +80,7 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // used to edit a user role
-        //[Authorize(Roles = "Director")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/EditRoleAsync")]
         public async Task<string> EditRoleAsync(string roleName, string desc)
         {
@@ -104,7 +108,7 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // used to delete a user role
-        //[Authorize(Roles = "Director")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/DeleteRoleAsync")]
         public async Task<string> DeleteRoleAsync(string roleName)
         {

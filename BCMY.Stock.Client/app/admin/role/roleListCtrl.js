@@ -13,8 +13,12 @@
             EnableTopNavigationBar();
             $("#loggedInUserWithTime").text(localStorage["userName"]);
             vm = defineModel(vm, $http, blockUI);
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             prepareInitialUI(vm);
-            wireCommands(vm);            
+            wireCommands(vm);
+            authoriseButtonAccess(vm);
         }
         else {
             localStorage["userName"] = null;
@@ -66,6 +70,18 @@
         };
     }
 
+    // authorise button access based on user roles
+    function authoriseButtonAccess(vm) {
+        debugger        
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+            vm.insertRoleBtnDisabled = false;
+        }
+        else {
+            vm.insertRoleBtnDisabled = true;
+        }
+    }
+
     // used to insert new roles
     function insertRole(vm)
     {
@@ -108,7 +124,7 @@
     {
         vm.httpService({
             method: "post",
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
 
@@ -138,7 +154,7 @@
         var roles = null;
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/role'),
         }).success(function (data) {            
             roles = data;            
@@ -173,8 +189,32 @@
                     },
 
                    
-                    { "sTitle": "Edit", "defaultContent": "<button class='roleInfo'><span class='glyphicon glyphicon-edit'></span></button>" },
-                    { "sTitle": "Delete", "defaultContent": "<button class='roleDelete'><span class='glyphicon glyphicon-remove'></span></button>" }
+                    //{ "sTitle": "Edit", "defaultContent": "<button class='roleInfo'><span class='glyphicon glyphicon-edit'></span></button>" },
+                    {
+                        "sTitle": "Edit", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+                                return "<button class='roleInfo'><span class='glyphicon glyphicon-edit'></span></button>";
+                            }
+                            else {
+                                return "<button class='roleInfo' disabled><span class='glyphicon glyphicon-edit'></span></button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
+                    //{ "sTitle": "Delete", "defaultContent": "<button class='roleDelete'><span class='glyphicon glyphicon-remove'></span></button>" }
+                    {
+                        "sTitle": "Edit", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+                                return "<button class='roleDelete'><span class='glyphicon glyphicon-remove'></span></button>";
+                            }
+                            else {
+                                return "<button class='roleDelete' disabled><span class='glyphicon glyphicon-remove'></span></button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
             ],
             "bDestroy": true,           
             "aLengthMenu": [[15, 50, 100, 200, 500, 700, 1000, -1], [15, 50, 100, 200, 500, 700, 1000, "All"]],
@@ -231,7 +271,7 @@
                             var serverUrl = ('https://localhost:44302/api/DeleteRoleAsync?' + dataForBody);
                             vm.httpService({
                                 method: "post",
-                                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+                                headers: vm.messageHeadersForEnc,
                                 url: serverUrl
                             }).success(function (data) {
 

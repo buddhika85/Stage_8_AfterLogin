@@ -1,7 +1,7 @@
 ﻿<div>
     <h4>{{vm.title}}</h4>
     <br />
-    <button ng-click='vm.insertRole()'>Insert new user role</button>
+    <button ng-click='vm.insertRole()' ng-disabled="{{vm.insertRoleBtnDisabled}}">Insert new user role</button>
     <br />
     <br />
 
