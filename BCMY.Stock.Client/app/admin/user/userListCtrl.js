@@ -17,6 +17,7 @@
             vm = defineModel(vm, $http, $scope, blockUI);            
             prepareInitialUI(vm);
             wireCommands(vm);
+            authoriseAccessCreateUser(vm);
         }
         else {
             localStorage["userName"] = null;
@@ -150,6 +151,18 @@
         });
     }
 
+    // authorise button access based on user roles
+    function authoriseAccessCreateUser(vm) {
+        debugger
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+            vm.userCreationDisabled = false;
+        }
+        else {
+            vm.userCreationDisabled = true;
+        }
+    }
+
     // used to get available role info and used to create the roles grid
     function drawUsersGrid(vm) {        
         var users = null;
@@ -236,16 +249,39 @@
                         "aTargets": [0]
                     },
 
-                    { "sTitle": "More info", "defaultContent": "<button class='userInfo'><span class='glyphicon glyphicon-search'></span></button>" },
-                    { "sTitle": "Edit", "defaultContent": "<button class='editUser'><span class='glyphicon glyphicon-edit'></span></button>" },
+                    { "sTitle": "More info", "defaultContent": "<button class='userInfo'><span class='glyphicon glyphicon-search'></span></button>" },                    
+                    //{ "sTitle": "Edit", "defaultContent": "<button class='editUser'><span class='glyphicon glyphicon-edit'></span></button>" },
+                    {
+                        "sTitle": "Edit", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+                                return "<button class='editUser'><span class='glyphicon glyphicon-edit'></span></button>";
+                            }
+                            else {
+                                return "<button class='editUser' disabled><span class='glyphicon glyphicon-edit'></span></button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
                     //{ "sTitle": "Lock/Unlock", "defaultContent": "<button class='userLock'><span class='glyphicon glyphicon-lock'></span></button>" },
                     {
                         "mData": "locked", "sTitle": "Lock/Unlock", "sClass": "right", "mRender": function (data, type, row) {
-                            if (data == false) {
-                                return "<button class='userLock' class='btn-sm btn-danger' style='width:75%;background-color: #ff4d4d;'> Lock </button>";
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+                                if (data == false) {
+                                    return "<button class='userLock' class='btn-sm btn-danger' style='width:75%;background-color: #ff4d4d;'> Lock </button>";
+                                }
+                                else {
+                                    return "<button class='userLockUnlock' class='btn-sm btn-info' style='width:75%;background-color: #668cff;'>Unlock</button>";
+                                }
                             }
                             else {
-                                return "<button class='userLockUnlock' class='btn-sm btn-info' style='width:75%;background-color: #668cff;'>Unlock</button>";
+                                if (data == false) {
+                                    return "<button class='userLock' class='btn-sm btn-danger' style='width:75%;background-color: #ff4d4d;' disabled> Lock </button>";
+                                }
+                                else {
+                                    return "<button class='userLockUnlock' class='btn-sm btn-info' style='width:75%;background-color: #668cff;' disabled>Unlock</button>";
+                                }
                             }
                         },
                         "aTargets": [0]
@@ -400,7 +436,7 @@
 
             vm.httpService({
                 method: "post",
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl
             }).success(function (data) {
                 if (data.indexOf('Success') > -1) {
@@ -410,7 +446,7 @@
                     serverUrl = ('https://localhost:44302/api/AssignRolesAsync?' + dataForBody);
                     vm.httpService({
                         method: "post",
-                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+                        headers: vm.messageHeadersForEnc,
                         url: serverUrl
                     }).success(function (data) {
                         if (data.indexOf('Success') > -1) {
@@ -569,7 +605,7 @@
             
             vm.httpService({
                 method: "post",
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl
             }).success(function (data) {                
                 if (data.indexOf('Success') > -1) {
@@ -579,7 +615,7 @@
                     serverUrl = ('https://localhost:44302/api/AssignRolesAsync?' + dataForBody);
                     vm.httpService({
                         method: "post",
-                        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+                        headers: vm.messageHeadersForEnc,
                         url: serverUrl
                     }).success(function (data) {
                         if (data.indexOf('Success') > -1) {
@@ -639,7 +675,7 @@
         var users = null;
         vm.httpService({
             method: "post",
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage["access_token"] },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             users = data;

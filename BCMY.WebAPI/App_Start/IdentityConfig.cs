@@ -119,12 +119,17 @@ namespace BCMY.WebAPI
                 IList<ApplicationUser> users = userManager.Users.ToList<ApplicationUser>();
                 foreach (ApplicationUser item in users)
                 {
-                    if (item.UserName.Equals("simon@bcmy.co.uk") || item.UserName.Equals("jeremy@bcmy.co.uk"))
+                    if (item.UserName.Equals("simon@bcmy.co.uk") || item.UserName.Equals("jeremy@bcmy.co.uk") || item.UserName.Equals("dir@bcmy.co.uk"))
                     {
                         userManager.AddToRole(item.Id, "Director");
                     }
-                    else {
+                    else if (item.UserName.Equals("buddhika@bcmy.co.uk"))
+                    {
                         userManager.AddToRole(item.Id, "Executive-Sales");
+                    }
+                    else if (item.UserName.Equals("hr@bcmy.co.uk"))
+                    {
+                        userManager.AddToRole(item.Id, "Management-HR");
                     }
                 }
             }
@@ -192,6 +197,44 @@ namespace BCMY.WebAPI
                         DirectDial = null,
                         Extension = null,
                         EmploymentDate = new DateTime(2015, 04, 22),
+                        RegistrationDate = DateTime.Now,
+                        LastLogInTime = null,
+                        LastLogoutTime = null,
+                        IsLoggedIn = false,
+                        InvalidLoginAttemptCount = 0,
+                        LastInvalidLoginAttemptTime = null,
+                        Locked = false
+                    },
+                    new ApplicationUser() {
+                        UserName = "dir@bcmy.co.uk",
+                        Email = "dir@bcmy.co.uk",
+                        EmailConfirmed = true,
+                        Title = Enums.Titles.Mr,
+                        FirstName = "Test Director",
+                        LastName = "Test Director",
+                        Position = "Director",
+                        DirectDial = null,
+                        Extension = null,
+                        EmploymentDate = new DateTime(2016, 01, 01),
+                        RegistrationDate = DateTime.Now,
+                        LastLogInTime = null,
+                        LastLogoutTime = null,
+                        IsLoggedIn = false,
+                        InvalidLoginAttemptCount = 0,
+                        LastInvalidLoginAttemptTime = null,
+                        Locked = false
+                    },
+                    new ApplicationUser() {
+                        UserName = "hr@bcmy.co.uk",
+                        Email = "hr@bcmy.co.uk",
+                        EmailConfirmed = true,
+                        Title = Enums.Titles.Mr,
+                        FirstName = "Test HR",
+                        LastName = "Test HR",
+                        Position = "HR manager",
+                        DirectDial = null,
+                        Extension = null,
+                        EmploymentDate = new DateTime(2016, 01, 01),
                         RegistrationDate = DateTime.Now,
                         LastLogInTime = null,
                         LastLogoutTime = null,

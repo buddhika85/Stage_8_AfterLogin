@@ -27,7 +27,7 @@ namespace BCMY.WebAPI.Controllers.admin
     /// Used to expose user related data
     /// </summary>
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
-    //[Authorize]
+    [Authorize]
     public class UserController : ApiController
     {
         ApplicationRoleManager roleManager = null;
@@ -49,7 +49,11 @@ namespace BCMY.WebAPI.Controllers.admin
 
 
         // used to retreive all the user roles
-        //[Authorize(Roles = "Director")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         public IList<ApplicationUserViewModel> GetUsers()
         {
             IList<ApplicationUserViewModel> userVms = null;
@@ -72,7 +76,11 @@ namespace BCMY.WebAPI.Controllers.admin
             return userVms;
         }
 
-        [Authorize]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         [HttpPost, Route("api/GetUserByEmail")]
         public ApplicationUserViewModel GetUser(string username)
         {
@@ -162,7 +170,8 @@ namespace BCMY.WebAPI.Controllers.admin
             return vm;
         }
 
-        // Updates a user asynchronously    //,    
+        // Updates a user asynchronously    //,  
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/UpdateUserAsync")]
         public async Task<string> UpdateUserAsync(string username, string firstname, string lastname, string position, string telephone, int? extension, string employmentDate, string registrationDate, string locked)
         {
@@ -201,7 +210,8 @@ namespace BCMY.WebAPI.Controllers.admin
         }
                         
 
-        // Updates a user asynchronously    //,    
+        // Updates a user asynchronously    //,   
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/LockUnlockUserAsync")]
         public async Task<string> LockUnlockUserAsync(string username, string lockUnlock)
         {
@@ -235,6 +245,7 @@ namespace BCMY.WebAPI.Controllers.admin
 
 
         // Creates a user asynchronously    //,    
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/CreateUserAsync")]
         public async Task<string> CreateUserAsync(string username, string firstname, string lastname, string position, string telephone, int? extension, string employmentDate, string registrationDate)
         {
@@ -305,6 +316,7 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // used to assign the roles to the created user
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementHR)]
         [HttpPost, Route("api/AssignRolesAsync")]
         public async Task<string> AssignRolesAsync(string username, string rolescsv)
         {
@@ -334,6 +346,11 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // used to search users 
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         [HttpPost, Route("api/SearchUsersSQL")]
         public IList<ApplicationUserViewModel> SearchUsersSQL(string username, string userRolesCsv, string firstname, string lastname, string position, string employmentDate, string registrationDate, string lastLoginDateTime, string lastInvalidLoginDateTime) 
         {
@@ -392,6 +409,11 @@ namespace BCMY.WebAPI.Controllers.admin
 
 
         // used to search the users
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         [HttpPost, Route("api/SearchUsers")]
         public IList<ApplicationUserViewModel> SearchUsers(string username, string userRolesCsv, string firstname, string lastname, string position, string employmentDate, string registrationDate, string lastLoginDateTime, string lastInvalidLoginDateTime)
         {
@@ -512,6 +534,11 @@ namespace BCMY.WebAPI.Controllers.admin
         }
 
         // A helper method to do the user search 
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementHR + "," + CustomRoles.ManagementMarketing)]
         private IList<ApplicationUser> SearchUsersHelper(IQueryable<ApplicationUser> users, IQueryable<ApplicationRole> roles, string userRolesCsv, string username, string firstname, string lastname, string position, string employmentDate, string registrationDate, string lastLoginDateTime, string lastInvalidLoginDateTime)
         {
             try

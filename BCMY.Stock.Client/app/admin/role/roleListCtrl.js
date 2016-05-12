@@ -204,7 +204,7 @@
                     },
                     //{ "sTitle": "Delete", "defaultContent": "<button class='roleDelete'><span class='glyphicon glyphicon-remove'></span></button>" }
                     {
-                        "sTitle": "Edit", "mRender": function (data, type, row) {
+                        "sTitle": "Delete", "mRender": function (data, type, row) {
                             if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
                                     $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
                                 return "<button class='roleDelete'><span class='glyphicon glyphicon-remove'></span></button>";
