@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using DataAccess_EF.EntityFramework;
 using GenericRepository_UnitOfWork.GR;
 using GenericRepository_UnitOfWork.UOW;
@@ -16,6 +17,7 @@ using System.Web.Script.Serialization;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class CustomerSupplierController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -31,6 +33,11 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // GET: api/CustomerSupplier
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + 
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         public IEnumerable<TblCustomerSupplier> Get()
         {
             try
@@ -46,6 +53,12 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // GET: api/CustomerSupplier/5
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
+        [HttpGet, Route("api/GetCustomerSupplierById/")]
         public TblCustomerSupplier Get(int id)
         {
             try
@@ -89,6 +102,8 @@ namespace BCMY.WebAPI.Controllers
         //}
 
         // used to save - insert/update
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase)]
         [HttpGet, ActionName("Save")]       
         public string Save(int idVal, string name, string logo, string addressLine1, string addressLine2, string addressLine3, string postcode, string country, string telephone,
             string bank, string vatNumber, string accountNumber, string sortCode, string iban, string swift, bool active, string town, string county)
@@ -161,6 +176,8 @@ namespace BCMY.WebAPI.Controllers
 
         /// Returns TblCustomerSupplier list based on contacts full name
         /// ful name = firstName + _ + lastname
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase)]
         [HttpGet, ActionName("GetCustomerSuppliersByContactFulName")]
         public IEnumerable<TblCustomerSupplier> GetCustomerSuppliersByContactFulName(string contactFulName)
         {

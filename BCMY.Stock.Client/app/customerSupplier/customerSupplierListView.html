@@ -1,7 +1,7 @@
 ﻿<div>
     <h4>{{vm.title}}</h4>
     <br />
-    <button ng-click='vm.insertBusiness()'>Insert new customer/supplier</button>
+    <button ng-click='vm.insertBusiness()' ng-disabled="{{vm.insertBusinessDisabled}}">Insert new customer/supplier</button>
     <br />
     <br />
 

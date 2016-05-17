@@ -285,6 +285,8 @@
         //$('#amendStock').css("visibility", "hidden");        
         //}
         $("#amendStock").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'management-hr');
+        $("#manageCustomerSupplier").toggleClass('linkNotActive', ($.trim(localStorage["userRolesList"]) == 'management-hr' || $.trim(localStorage["userRolesList"]) == 'administrator-production'));
+        //$("#manageCustomerSupplier").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'administrator-production');
     }
 
         

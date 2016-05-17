@@ -13,17 +13,35 @@
         var vm = this;
         if (loginValidatorService.loginValidator()) {
             EnableTopNavigationBar();
+            authoriseAccessToInsertCustSuplr(vm);
+
             $("#loggedInUserWithTime").text(localStorage["userName"]);
+            vm.httpService = $http;
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             vm.apiUrl = 'https://localhost:44302/api/customerSupplier/';         // web API url for update and insert
             vm.newCustomerSupplier = {};
             vm.title = "Manage Customers/Suppliers";
 
             blockUI.start();
-            customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+            //customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+            //    vm.customerSuppliers = data;
+            //    createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
+            //    blockUI.stop();
+            //});            
+            $http({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: vm.apiUrl,
+            }).success(function (data) {                
                 vm.customerSuppliers = data;
-                createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
-                blockUI.stop();
+                createPopulateDataGrid(vm, customerSupplierResource);
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
             });
+            blockUI.stop();
 
             //$scope.$watch('files', function () {
             //    vm.onFileSelect(this.files);
@@ -60,7 +78,7 @@
                         // save data via angular
                         $http({
                             method: "get",
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: vm.messageHeadersForEnc,
                             url: serverUrl, //'https://localhost:44302/api/customerSupplier/',
                             //data: JSON.stringify(jsonStr)
                         })
@@ -77,10 +95,24 @@
                                 // refersh the grid to display the new record
                                 var table = $('#example').DataTable();
                                 table.destroy();
-                                customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+                                //customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+                                //    vm.customerSuppliers = data;
+                                //    createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
+                                //});
+                                blockUI.start();
+
+                                $http({
+                                    method: "get",
+                                    headers: vm.messageHeadersForEnc,
+                                    url: vm.apiUrl,
+                                }).success(function (data) {                                    
                                     vm.customerSuppliers = data;
-                                    createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
+                                    createPopulateDataGrid(vm, customerSupplierResource);
+                                }
+                                ).error(function (data) {
+                                    alert('error - web service access')     // display error message            
                                 });
+                                blockUI.stop();
                             }
                             else {
                                 EnableDisableFeilds(false);          // enable all fields to re-enter/correct inputs
@@ -112,7 +144,7 @@
 
                         $http({
                             method: "get",
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: vm.messageHeadersForEnc,
                             url: serverUrl,
                         })
                         .success(function (data) {
@@ -128,10 +160,24 @@
                                 // refersh the grid to display the updated record
                                 var table = $('#example').DataTable();
                                 table.destroy();
-                                customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+                                //customerSupplierResource.query(function (data) {                    // REST API call to get all the customerSuppliers 
+                                //    vm.customerSuppliers = data;
+                                //    createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
+                                //});
+                                blockUI.start();
+
+                                $http({
+                                    method: "get",
+                                    headers: vm.messageHeadersForEnc,
+                                    url: vm.apiUrl,
+                                }).success(function (data) {                                    
                                     vm.customerSuppliers = data;
-                                    createPopulateDataGrid(vm, customerSupplierResource);           // populate the data grid
+                                    createPopulateDataGrid(vm, customerSupplierResource);
+                                }
+                                ).error(function (data) {
+                                    alert('error - web service access')     // display error message            
                                 });
+                                blockUI.stop();
                             }
                             else {
                                 EnableDisableFeilds(false);          // enable all fields to re-enter/correct inputs
@@ -163,6 +209,22 @@
         }
         
     };
+
+    // authorise button access based on user roles
+    function authoriseAccessToInsertCustSuplr(vm)
+    {
+        debugger
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+            vm.insertBusinessDisabled = false;
+        }
+        else {
+            vm.insertBusinessDisabled = true;
+        }
+    }
 
     // jquery UI masks to format user inputs
     function ApplyUiMasks()
@@ -397,13 +459,36 @@
     }
 
     // Editing existing customer/supplier
-    function OnEditBtnClick(record, customerSupplierResource)
+    function OnEditBtnClick(record, customerSupplierResource, vm)
     {
         var customerSupplier = null;
         RemoveOutlineBorders();
         if (record != null) {
             // REST API call to get the customerSuppliers by Id
-            customerSupplierResource.get({ id: record.id }, function (data) {
+            //customerSupplierResource.get({ id: record.id }, function (data) {
+            //    customerSupplier = data;
+            //    // populate the Edit form and pop it up
+            //    if (customerSupplier != null) {
+            //        populateFormPopup(customerSupplier);
+            //        EnableDisableFeilds(false);
+            //        $('#lblErrorMessage').text("");
+            //        $('#modalTitle').text("Editing Customer/Supplier : " + customerSupplier.name);
+            //        $('#myModal').modal({
+            //            show: true,
+            //            keyboard: true,
+            //            backdrop: true
+            //        });
+            //    }
+            //    else {
+            //        alert("Error - Selected customer does not exist");
+            //    }
+            //});            
+            var apiUrl = 'https://localhost:44302/api/GetCustomerSupplierById?id=' + record.id;
+            vm.httpService({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: apiUrl,
+            }).success(function (data) {                
                 customerSupplier = data;
                 // populate the Edit form and pop it up
                 if (customerSupplier != null) {
@@ -420,7 +505,10 @@
                 else {
                     alert("Error - Selected customer does not exist");
                 }
-            });
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
+            });            
         }
         //else {
         //    alert("Error - Please select a customer/supplier first");
@@ -428,12 +516,35 @@
     }
 
     // View information on existing customer/supplier
-    function OnInfoBtnClick(record, customerSupplierResource)
+    function OnInfoBtnClick(record, customerSupplierResource, vm)
     {
         var customerSupplier = null;
         if (record != null) {
             // REST API call to get the customerSuppliers by Id
-            customerSupplierResource.get({ id: record.id }, function (data) {
+            //customerSupplierResource.get({ id: record.id }, function (data) {
+            //    customerSupplier = data;
+            //    // populate the Edit form and pop it up
+            //    if (customerSupplier != null) {
+            //        populateFormPopup(customerSupplier);
+            //        EnableDisableFeilds(true);
+            //        $('#lblErrorMessage').text("");
+            //        $('#modalTitle').text("Infomation Customer/Supplier : " + record.name);
+            //        $('#myModal').modal({
+            //            show: true,
+            //            keyboard: true,
+            //            backdrop: true
+            //        });
+            //    }
+            //    else {
+            //        alert("Error - Selected customer does not exist");
+            //    }
+            //});            
+            var apiUrl = 'https://localhost:44302/api/GetCustomerSupplierById?id=' + record.id;
+            vm.httpService({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: apiUrl,
+            }).success(function (data) {                
                 customerSupplier = data;
                 // populate the Edit form and pop it up
                 if (customerSupplier != null) {
@@ -450,7 +561,10 @@
                 else {
                     alert("Error - Selected customer does not exist");
                 }
-            });
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
+            });            
         }
         //else {
         //    alert("Error - Please select a customer/supplier first");
@@ -482,8 +596,38 @@
                     },
                     { "mData": "telephone", "sTitle": "Telephone" },
                     { "mData": "country", "sTitle": "Country" },
-                    { "sTitle": "View More", "defaultContent": "<button class='businessInfo'>Info!</button>" },
-                    { "sTitle": "Edit Info", "defaultContent": "<button class='businessEdit'>Edit</button>" },
+                    //{ "sTitle": "View More", "defaultContent": "<button class='businessInfo'>Info!</button>" },
+                    {
+                        "sTitle": "View More", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+                                return "<button class='businessInfo'>Info!</button>";
+                            }
+                            else {
+                                return "<button class='businessInfo' disabled>Info!</button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
+                    //{ "sTitle": "Edit Info", "defaultContent": "<button class='businessEdit'>Edit</button>" },
+                    {
+                        "sTitle": "Edit Info", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+                                return "<button class='businessEdit'>Edit</button>";
+                            }
+                            else {
+                                return "<button class='businessEdit' disabled>Edit</button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
             ],
             "bDestroy": true,
             "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
@@ -494,17 +638,17 @@
         var table = $('#example').DataTable();
 
         // on info button clicks
-        $('#example tbody').on('click', 'button.businessInfo', function () {
+        $('#example tbody').on('click', 'button.businessInfo', function () {            
             var data = table.row($(this).parents('tr')).data();
             //alert("View Info : " + data.id + " - " + data.name);
-            OnInfoBtnClick(data, customerSupplierResource);
+            OnInfoBtnClick(data, customerSupplierResource, viewModel);
         });
 
         // on edit button clicks
-        $('#example tbody').on('click', 'button.businessEdit', function () {
+        $('#example tbody').on('click', 'button.businessEdit', function () {            
             var data = table.row($(this).parents('tr')).data();
             //alert("Edit Info : " + data.id + " - " + data.name);
-            OnEditBtnClick(data, customerSupplierResource);
+            OnEditBtnClick(data, customerSupplierResource, viewModel);
         });
 
         // row selection in the data grid        
