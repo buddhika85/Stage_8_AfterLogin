@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using BCMY.WebAPI.Util;
 using DataAccess_EF.EntityFramework;
 using DataAccess_EF.ViewModels;
@@ -18,6 +19,7 @@ using System.Web.Script.Serialization;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class ContactController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -33,6 +35,11 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // GET: api/Contact
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         public IEnumerable<ContactsViewModel> Get()
         {
             try
@@ -48,6 +55,11 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // GET: api/Contact/5
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         public ContactsViewModel Get(int id)
         {
             try
@@ -67,6 +79,8 @@ namespace BCMY.WebAPI.Controllers
         /// <summary>
         /// For insert or update
         /// </summary>       
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase)]
         [HttpGet, ActionName("Save")]     
         public string Save(int id, string title, string firstName, string lastName, string position, string directDial, string email, string status, string notes, int customerSupplierId, int? extension)
         {
@@ -164,6 +178,11 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // Returns TblContact list based on customerSupplierId
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         [HttpGet, ActionName("GetContactsByCustomerSupplierId")]
         public IEnumerable<TblContact> GetContactsByCustomerSupplierId(string customerSupplierId)
         {
@@ -181,6 +200,8 @@ namespace BCMY.WebAPI.Controllers
                 return null;
             }       
         }
+
+        #region HELPER_METHODS
 
         /// <summary>
         /// Validates user inputs
@@ -230,5 +251,7 @@ namespace BCMY.WebAPI.Controllers
                 return null;
             }
         }
+
+        #endregion HELPER_METHODS
     }
 }

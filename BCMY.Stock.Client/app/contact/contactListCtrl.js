@@ -14,18 +14,35 @@
         var vm = this;
         if (loginValidatorService.loginValidator()) {
             EnableTopNavigationBar();
+            authoriseAccessToInsertContact(vm);
             $("#loggedInUserWithTime").text(localStorage["userName"]);
+            vm.httpService = $http;
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             vm.title = "Manage Contacts of the Customers/Suppliers";
             vm.apiUrl = 'https://localhost:44302/api/contact/';          // web API url for update and insert
 
             blockUI.start();
-            contactResource.query(function (data) {                     // REST API call to get all the contacts with company names 
+            //contactResource.query(function (data) {                     // REST API call to get all the contacts with company names 
+            //    vm.contacts = data;
+            //    createPopulateDataGrid(vm, contactResource);            // populate the data grid
+            //    blockUI.stop();
+            //});
+            $http({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: vm.apiUrl,
+            }).success(function (data) {
                 vm.contacts = data;
                 createPopulateDataGrid(vm, contactResource);            // populate the data grid
-                blockUI.stop();
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
             });
+            blockUI.stop();
 
-            populateCompanyDropDown(customerSupplierResource);          // used to populate company ddl for the popups
+            populateCompanyDropDown(customerSupplierResource, vm);          // used to populate company ddl for the popups
 
             vm.insertContact = function ()                              // insert new contact person
             {
@@ -53,7 +70,7 @@
                         // save data via angular
                         $http({
                             method: "get",
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: vm.messageHeadersForEnc,
                             url: serverUrl
                             //data: JSON.stringify(jsonStr)
                         })
@@ -100,7 +117,7 @@
 
                         $http({
                             method: "get",
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: vm.messageHeadersForEnc,
                             url: serverUrl
                             //data: JSON.stringify(jsonStr)
                         })
@@ -150,6 +167,22 @@
 
     };
 
+    // authorise button access based on user roles
+    function authoriseAccessToInsertContact(vm)
+    {
+        debugger
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+            vm.insertContactDisabled = false;
+        }
+        else {
+            vm.insertContactDisabled = true;
+        }
+    }
+
     // jquery UI masks to format user inputs
     function ApplyUiMasks() {
         // '+99-(9)9999 9999 next 3 numbers are optional'
@@ -178,15 +211,31 @@
     }
 
     // used to populate company ddl for the popups
-    function populateCompanyDropDown(customerSupplierResource)
+    function populateCompanyDropDown(customerSupplierResource, vm)
     {
-        customerSupplierResource.query(function (data) {            // REST API call to get all the companies with company names
+        //customerSupplierResource.query(function (data) {            // REST API call to get all the companies with company names
+        //    var listitems = '<option value=-1 selected="selected">---- Select Customer / Supplier ----</option>';
+        //    $.each(data, function (index, item) {
+        //        listitems += '<option value=' + item.id + '>' + item.name + '</option>';
+        //    });
+        //    $("#selectCompany option").remove();
+        //    $("#selectCompany").append(listitems);
+        //});
+        var apiUrl = 'https://localhost:44302/api/CustomerSupplier';
+        vm.httpService({
+            method: "get",
+            headers: vm.messageHeadersForEnc,
+            url: apiUrl,
+        }).success(function (data) {
             var listitems = '<option value=-1 selected="selected">---- Select Customer / Supplier ----</option>';
             $.each(data, function (index, item) {
                 listitems += '<option value=' + item.id + '>' + item.name + '</option>';
             });
             $("#selectCompany option").remove();
             $("#selectCompany").append(listitems);
+        }
+        ).error(function (data) {
+            alert('error - web service access')     // display error message            
         });
     }
 
@@ -237,8 +286,38 @@
                     { "mData": "customerSupplierId", "sTitle": "Company", "bVisible": false },
                     
                     
-                    { "sTitle": "View More", "defaultContent": "<button class='businessInfo'>Info!</button>" },
-                    { "sTitle": "Edit Info", "defaultContent": "<button class='businessEdit'>Edit</button>" },
+                    //{ "sTitle": "View More", "defaultContent": "<button class='businessInfo'>Info!</button>" },
+                    {
+                        "sTitle": "View More", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+                                return "<button class='businessInfo'>Info!</button>";
+                            }
+                            else {
+                                return "<button class='businessInfo' disabled>Info!</button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
+                    //{ "sTitle": "Edit Info", "defaultContent": "<button class='businessEdit'>Edit</button>" },
+                    {
+                        "sTitle": "Edit Info", "mRender": function (data, type, row) {
+                            if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1 ||
+                                    $.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) {
+                                return "<button class='businessEdit'>Edit</button>";
+                            }
+                            else {
+                                return "<button class='businessEdit' disabled>Edit</button>";
+                            }
+                        },
+                        "aTargets": [0]
+                    },
             ],
             "bDestroy": true,
             "aLengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
@@ -252,14 +331,14 @@
         $('#example tbody').on('click', 'button.businessInfo', function () {
             var data = table.row($(this).parents('tr')).data();
             //alert("View Info : " + data.id + " - " + data.name);
-            OnInfoBtnClick(data, contactResource);
+            OnInfoBtnClick(data, contactResource, viewModel);
         });
 
         // on edit button clicks
         $('#example tbody').on('click', 'button.businessEdit', function () {
             var data = table.row($(this).parents('tr')).data();
             //alert("Edit Info : " + data.id + " - " + data.name);
-            OnEditBtnClick(data, contactResource);
+            OnEditBtnClick(data, contactResource, viewModel);
         });
 
         // row selection in the data grid        
@@ -275,11 +354,35 @@
     }
 
     // Editing existing contact person
-    function OnEditBtnClick(record, contactResource) {        
+    function OnEditBtnClick(record, contactResource, vm) {        
         var contact = null;
         if (record != null) {
             // REST API call to get the contact by Id
-            contactResource.get({ id: record.id }, function (data) {
+            //contactResource.get({ id: record.id }, function (data) {
+            //    contact = data;
+            //    // populate the Edit form and pop it up
+            //    if (contact != null) {
+            //        populateFormPopup(contact);
+            //        EnableDisableFeilds(false);
+            //        RemoveOutlineBorders();
+            //        $('#lblErrorMessage').text("");
+            //        $('#modalTitle').text("Editing Contact : " + contact.firstName + " " + contact.lastName);
+            //        $('#myModal').modal({
+            //            show: true,
+            //            keyboard: true,
+            //            backdrop: true
+            //        });
+            //    }
+            //    else {
+            //        alert("Error - Selected contact does not exist");
+            //    }
+            //});
+            var apiUrl = 'https://localhost:44302/api/contact?id=' + record.id;
+            vm.httpService({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: apiUrl,
+            }).success(function (data) {
                 contact = data;
                 // populate the Edit form and pop it up
                 if (contact != null) {
@@ -297,16 +400,44 @@
                 else {
                     alert("Error - Selected contact does not exist");
                 }
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
             });
+
         }
     }
 
     // View information on existing contact person
-    function OnInfoBtnClick(record, contactResource) {        
+    function OnInfoBtnClick(record, contactResource, vm) {        
         var contact = null;
         if (record != null) {
             // REST API call to get the contact by Id
-            contactResource.get({ id: record.id }, function (data) {
+            //contactResource.get({ id: record.id }, function (data) {
+            //    contact = data;
+            //    // populate the Edit form and pop it up
+            //    if (contact != null) {
+            //        populateFormPopup(contact);
+            //        EnableDisableFeilds(true);
+            //        RemoveOutlineBorders();
+            //        $('#lblErrorMessage').text("");
+            //        $('#modalTitle').text("Infomation on Contact : " + contact.firstName + " " + contact.lastName);
+            //        $('#myModal').modal({
+            //            show: true,
+            //            keyboard: true,
+            //            backdrop: true
+            //        });
+            //    }
+            //    else {
+            //        alert("Error - Selected contact does not exist");
+            //    }
+            //});
+            var apiUrl = 'https://localhost:44302/api/contact?id=' + record.id;
+            vm.httpService({
+                method: "get",
+                headers: vm.messageHeadersForEnc,
+                url: apiUrl,
+            }).success(function (data) {
                 contact = data;
                 // populate the Edit form and pop it up
                 if (contact != null) {
@@ -324,6 +455,9 @@
                 else {
                     alert("Error - Selected contact does not exist");
                 }
+            }
+            ).error(function (data) {
+                alert('error - web service access')     // display error message            
             });
         }
     }
