@@ -1,5 +1,6 @@
 ﻿(function () {
 
+
     "use strict";
     var module = angular.module("stockManagement");         // get module
     module.controller("EditProfileCtrl", ["$http", "blockUI", "$scope", "loginValidatorService", editProfileCtrl]);    // attach controller to the module
