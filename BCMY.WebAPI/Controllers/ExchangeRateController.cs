@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using DataAccess_EF.EntityFramework;
 using GenericRepository_UnitOfWork.GR;
 using GenericRepository_UnitOfWork.UOW;
@@ -15,6 +16,7 @@ using System.Web.Http.Cors;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class ExchangeRateController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -31,6 +33,8 @@ namespace BCMY.WebAPI.Controllers
 
         // GET: api/ExchangeRate
         // http://localhost:61945/api/exchangerate
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase)]
         public IEnumerable<TblExchangeRate> Get()
         {
             IEnumerable<TblExchangeRate> ers = null;
@@ -47,6 +51,7 @@ namespace BCMY.WebAPI.Controllers
 
         // Used to save past exchange rates
         // http://localhost:61945/api/exchangerate?date=30/10/2014&euro=1.3&usd=1.5
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ManagementPurchase)]
         [HttpGet, ActionName("SavePastExchangeRates")]
         public string SavePastExchangeRates(string date, decimal euro, decimal usd)
         {

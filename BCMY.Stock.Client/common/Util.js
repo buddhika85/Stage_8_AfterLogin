@@ -285,8 +285,19 @@
         //$('#amendStock').css("visibility", "hidden");        
         //}
         $("#amendStock").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'management-hr');
-        $("#manageCustomerSupplier").toggleClass('linkNotActive', ($.trim(localStorage["userRolesList"]) == 'management-hr' || $.trim(localStorage["userRolesList"]) == 'administrator-production'));
-        $("#manageContact").toggleClass('linkNotActive', ($.trim(localStorage["userRolesList"]) == 'management-hr' || $.trim(localStorage["userRolesList"]) == 'administrator-production'));
+        $("#manageCustomerSupplier").toggleClass('linkNotActive', ($.trim(localStorage["userRolesList"]) == 'management-hr' || $.trim(localStorage["userRolesList"]) == 'administrator-production') || $.trim(localStorage["userRolesList"]) == 'management-hr,administrator-production');
+        $("#manageContact").toggleClass('linkNotActive', ($.trim(localStorage["userRolesList"]) == 'management-hr' || $.trim(localStorage["userRolesList"]) == 'administrator-production') || $.trim(localStorage["userRolesList"]) == 'management-hr,administrator-production');
+
+        // disable for all roles and then enable if below roles are assigned    
+        $("#addPastExchgRates").addClass('linkNotActive');      
+        if ((($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1)
+                                                                || ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)))
+        {
+            $("#addPastExchgRates").removeClass('linkNotActive');
+        }        
+        
+        //$("#addPastExchgRates").toggleClass('linkNotActive', (($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1)
+                                                                //|| ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)));
         //$("#manageCustomerSupplier").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'administrator-production');
     }
 

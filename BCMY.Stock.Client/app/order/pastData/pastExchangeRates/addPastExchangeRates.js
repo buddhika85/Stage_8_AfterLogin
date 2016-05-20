@@ -9,8 +9,12 @@
         var vm = this;
         if (loginValidatorService.loginValidator()) {
             EnableTopNavigationBar();
+            authoriseAccessToInsertExcRates(vm);
             blockUI.start();
             $("#loggedInUserWithTime").text(localStorage["userName"]);
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             vm = defineModel(vm, $http);
             prepareInitialUI(vm);
             wireCommands(vm);
@@ -22,6 +26,21 @@
             window.location.reload();
         }        
     };
+
+    // authorise button access based on user roles
+    function authoriseAccessToInsertExcRates(vm) {
+        debugger
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||            
+            $.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) {
+            vm.saveExcRatesDisabled = false;
+            vm.restExcRateInsertDisabled = false;
+        }
+        else {
+            vm.saveExcRatesDisabled = true;
+            vm.restExcRateInsertDisabled = true;
+        }
+    }
 
     // used to define and assign initial values to the model properties
     function defineModel(vm, httpService)
@@ -79,7 +98,7 @@
             // send data to serverside for saving
             vm.httpService({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: ('https://localhost:44302/api/exchangerate?date=' + vm.dateInput +'&euro=' + vm.euroInput + '&usd=' + vm.usdInput),
             }).success(function (data) {
                 if (data.indexOf('Exchange rates updated for') != -1)       // if true -- insert success
@@ -149,7 +168,7 @@
     {
         vm.httpService({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/exchangerate'),
         }).success(function (data) {            
             $('#ersGrid').dataTable({

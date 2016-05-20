@@ -53,10 +53,10 @@
                             <label class="control-label fontWeightNormal" style="color:red" ng-bind="vm.errorMsg"></label>
                         </div>
                         <div class="col-md-2">
-                            <button class="col-md-12 fontWeightNormal" ng-click="vm.saveExchangeRates(vm)">Save E R</button>
+                            <button class="col-md-12 fontWeightNormal" ng-click="vm.saveExchangeRates(vm)" ng-disabled="{{vm.saveExcRatesDisabled}}">Save E R</button>
                         </div>                        
                         <div class="col-md-2">
-                            <button class="col-md-12 fontWeightNormal" ng-click="vm.reset(vm)">Reset</button>
+                            <button class="col-md-12 fontWeightNormal" ng-click="vm.reset(vm)" ng-disabled="{{vm.restExcRateInsertDisabled}}">Reset</button>
                         </div>
                         <div class="col-md-1">
                         </div>         
