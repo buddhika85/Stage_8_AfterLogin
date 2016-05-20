@@ -87,10 +87,23 @@
                                 // refersh the grid to display the new record
                                 var table = $('#example').DataTable();
                                 table.destroy();
-                                contactResource.query(function (data) {                    // REST API call to get all the contacts 
+                                //contactResource.query(function (data) {                    // REST API call to get all the contacts 
+                                //    vm.contacts = data;
+                                //    createPopulateDataGrid(vm, contactResource);           // populate the data grid
+                                //});
+                                blockUI.start();
+                                $http({
+                                    method: "get",
+                                    headers: vm.messageHeadersForEnc,
+                                    url: vm.apiUrl,
+                                }).success(function (data) {
                                     vm.contacts = data;
-                                    createPopulateDataGrid(vm, contactResource);           // populate the data grid
+                                    createPopulateDataGrid(vm, contactResource);            // populate the data grid
+                                }
+                                ).error(function (data) {
+                                    alert('error - web service access')     // display error message            
                                 });
+                                blockUI.stop();
                             }
                             else {
                                 EnableDisableFeilds(false);          // enable all fields to re-enter/correct inputs
@@ -134,10 +147,23 @@
                                 // refersh the grid to display the updated record
                                 var table = $('#example').DataTable();
                                 table.destroy();
-                                contactResource.query(function (data) {                    // REST API call to get all the contacts 
+                                //contactResource.query(function (data) {                    // REST API call to get all the contacts 
+                                //    vm.contacts = data;
+                                //    createPopulateDataGrid(vm, contactResource);           // populate the data grid
+                                //});
+                                blockUI.start();
+                                $http({
+                                    method: "get",
+                                    headers: vm.messageHeadersForEnc,
+                                    url: vm.apiUrl,
+                                }).success(function (data) {
                                     vm.contacts = data;
-                                    createPopulateDataGrid(vm, contactResource);           // populate the data grid
+                                    createPopulateDataGrid(vm, contactResource);            // populate the data grid
+                                }
+                                ).error(function (data) {
+                                    alert('error - web service access')     // display error message            
                                 });
+                                blockUI.stop();
                             }
                             else {
                                 EnableDisableFeilds(false);          // enable all fields to re-enter/correct inputs
