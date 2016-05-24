@@ -294,7 +294,13 @@
                                                                 || ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)))
         {
             $("#addPastExchgRates").removeClass('linkNotActive');
-        }        
+        }
+
+        // disable for all roles and then enable if below roles are assigned    
+        $("#addSalesOrder").addClass('linkNotActive');
+        if ((($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1))) {
+            $("#addSalesOrder").removeClass('linkNotActive');
+        }
         
         //$("#addPastExchgRates").toggleClass('linkNotActive', (($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1)
                                                                 //|| ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)));

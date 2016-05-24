@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using DataAccess_EF.EntityFramework;
 using DataAccess_EF.ViewModels;
 using GenericRepository_UnitOfWork.GR;
@@ -16,6 +17,7 @@ using System.Web.Http.Cors;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class SalesOrderController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -38,6 +40,7 @@ namespace BCMY.WebAPI.Controllers
 
         // GET: Get order view model by Id
         // http://localhost:61945/api/SalesOrder?orderId=1
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales)]
         [HttpGet, ActionName("GetSalesOrderById")]
         public OrderViewModel GetSalesOrderById(int orderId)
         {
@@ -57,6 +60,7 @@ namespace BCMY.WebAPI.Controllers
 
 
         // http://localhost:61945/api/SalesOrder?companyid=1&contactfulname=kumar_sangakkara&vat=YES&currency=1
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales)]
         [HttpGet, ActionName("CreateOrder")]
         public int CreateOrder(int companyId, string contactFulName, string vat, int currency)
         {

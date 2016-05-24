@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="col-md-2">
-                            <button ui-sref="contactList" class="col-md-12 btn btn-primary btn-xs fontWeightNormal" title="new contact creation" id="addContactBtn">Add New Contact</button>
+                            <button ui-sref="contactList" class="col-md-12 btn btn-primary btn-xs fontWeightNormal" title="new contact creation" id="addContactBtn" ng-disabled="{{vm.addContactDisabled}}">Add New Contact</button>
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
                             <label class="control-label fontWeightNormal" style="color:red" id="lblErrorMessageCrtOrdr"></label>
                         </div>
                         <div class="col-md-2">
-                            <button class="col-md-12 fontWeightNormal" ng-click="vm.createOrder()" id="createOrdrBtn">Create Order</button>
+                            <button class="col-md-12 fontWeightNormal" ng-click="vm.createOrder()" id="createOrdrBtn" ng-disabled="{{vm.createOrderDisabled}}">Create Order</button>
                         </div>
                     </div>
 
