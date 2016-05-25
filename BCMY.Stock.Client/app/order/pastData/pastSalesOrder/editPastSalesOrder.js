@@ -11,8 +11,11 @@
     function editPastSalesOrderCtrl($http, contactResource, blockUI, customerSupplierResource, $location, currencyResource, loginValidatorService) {
         var vm = this;
         if (loginValidatorService.loginValidator()) {
-            EnableTopNavigationBar();
+            EnableTopNavigationBar();            
             $("#loggedInUserWithTime").text(localStorage["userName"]);
+            vm.messageHeadersForEnc = {
+                'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
+            };
             vm.totalValue = "Total : £ 0.00";
             var searchObject = $location.search();                                                      // get order Id, that passed as query string
             var salesOrderId = searchObject.orderId;
@@ -33,7 +36,7 @@
             window.location.reload();
         }
         
-    };
+    };        
 
     // used to bind drop down list selection change commands for cascading ddls
     function wireCommands(vm, $http, contactResource, customerSupplierResource, $location) {

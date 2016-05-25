@@ -301,6 +301,8 @@
         if ((($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1))) {
             $("#addSalesOrder").removeClass('linkNotActive');
         }
+
+        $("#searchSalesOrder").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'management-hr');
         
         //$("#addPastExchgRates").toggleClass('linkNotActive', (($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1)
                                                                 //|| ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)));

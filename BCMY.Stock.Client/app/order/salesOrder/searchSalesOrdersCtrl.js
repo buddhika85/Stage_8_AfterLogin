@@ -19,6 +19,7 @@
             };            
             prepareInitialUI($http, customerSupplierResource, contactResource, vm);                                     // initial UI
             wireCommands(vm, $http, contactResource, customerSupplierResource, $location, $rootScope);                  // all the commands are bound here
+            authoriseSearchOrders(vm);
         }
         else {
             localStorage["userName"] = null;
@@ -74,6 +75,17 @@
         vm.resetSearch = function () {
             resetSearch(contactResource, customerSupplierResource, vm);
         };
+    }
+
+    // authorise button access based on user roles
+    function authoriseSearchOrders(vm) {
+        debugger
+        if (! $.trim(localStorage["userRolesList"]).indexOf('management-hr') > -1) {
+            vm.userCreationDisabled = false;
+        }
+        else {
+            vm.userCreationDisabled = true;
+        }
     }
 
     // used to perform the search of the orders
@@ -159,8 +171,34 @@
                             "aTargets": [0]
                         },
 
-                        { "sTitle": "Edit Order", "defaultContent": "<button class='orderSearchEdit'><span class='glyphicon glyphicon-edit'></span></button>" },
-                        { "sTitle": "Delete Order", "defaultContent": "<button class='orderSearchDelete'><span class='glyphicon glyphicon-remove'></span></button>" },
+                        //{ "sTitle": "Edit Order", "defaultContent": "<button class='orderSearchEdit'><span class='glyphicon glyphicon-edit'></span></button>" },
+                        {
+                            "sTitle": "Edit Order", "mRender": function (data, type, row) {
+                                if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                        $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+                                        $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+                                        $.trim(localStorage["userRolesList"]).indexOf('administrator-sales')) {
+                                    return "<button class='orderSearchEdit'><span class='glyphicon glyphicon-edit'></span></button>";
+                                }
+                                else {
+                                    return "<button class='orderSearchEdit' disabled><span class='glyphicon glyphicon-edit'></span></button>";
+                                }
+                            },
+                            "aTargets": [0]
+                        },
+                        //{ "sTitle": "Delete Order", "defaultContent": "<button class='orderSearchDelete'><span class='glyphicon glyphicon-remove'></span></button>" },
+                        {
+                            "sTitle": "Delete Order", "mRender": function (data, type, row) {
+                                if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+                                        $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) {
+                                    return "<button class='orderSearchDelete'><span class='glyphicon glyphicon-remove'></span></button>";
+                                }
+                                else {
+                                    return "<button class='orderSearchDelete' disabled><span class='glyphicon glyphicon-remove'></span></button>";
+                                }
+                            },
+                            "aTargets": [0]
+                        },
                 ],
                 "bDestroy": true,
                 "aLengthMenu": [[10, 25, 100, -1], [10, 25, 100, "All"]],
@@ -181,13 +219,13 @@
                 var row = $(this).parents('tr');
                 var dataRow = table.row($(this).parents('tr')).data();
                 //alert("View Info : " + data.productlistId + " - " + data.model);
-                onOrderDeleteBtnClick(dataRow, $http, row, vm);
+                onOrderDeleteBtnClick(dataRow, $http, row, vm, $location, $rootScope);
             });
         }
     }
 
     // on delete button click
-    function onOrderDeleteBtnClick(dataRow, $http, row, vm) {
+    function onOrderDeleteBtnClick(dataRow, $http, row, vm, $location, $rootScope) {
         
         bootbox.dialog({
             message: "Are you sure that you want to delete order " + dataRow.id + " by " + dataRow.contactFulName + " of " + dataRow.company + " ?",
@@ -212,7 +250,8 @@
                             url: ('https://localhost:44302/api/Order?deleteOrderId=' + orderId),
                         }).success(function (data) {
                             debugger
-                            refreshGridAfterDelete(row); // refresh grid if the deletion success                            
+                            //refreshGridAfterDelete(row); // refresh grid if the deletion success  
+                            searchOrders($http, $location, $rootScope, vm)
                             toastr.success(data);
                         }
                         ).error(function (data) {
@@ -414,7 +453,8 @@
 
     // on a contact name selection - populate company DDL with contact full name
     function onContactDDLSelection($http, customerSupplierResource, contactResource, vm) {
-        //alert('on contact selection - ' + $("#selectContact").val());   
+        //alert('on contact selection - ' + $("#selectContact").val()); 
+        debugger
         var selectedCompany = $("#selectCustSupp").val();
         var selectedFulName = $("#selectContact").val();
         if (selectedFulName != -1) {

@@ -7,7 +7,7 @@
                         
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.editSalesOrderDisabled}}">
                 <legend style="font-size:medium;" class="panel-heading" id="customerHeaderPanel">Buyer / Seller information</legend>  
                 <div id="customerSection">
                     <div class="form-group row">
@@ -80,9 +80,8 @@
 
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.editSalesOrderDisabled}}">
                 <legend style="font-size:medium;" id="productSearchPanelHeading" class="panel-heading">Product information</legend>
-
                 <div id="productSerahcForm">
                     <!--Information on search-->
                     <div class="form-group row">
@@ -93,9 +92,7 @@
                             and finally the <code>model</code>
                         </p>
                     </div>
-
                     <div class="form-group row">
-
                         <!--category selection-->
                         <label for="selectCategory" class="control-label col-md-1 fontWeightNormal">Category</label>
                         <div class="col-md-4">
@@ -103,7 +100,6 @@
                                 <option>---- Select Category ----</option>
                             </select>
                         </div>
-
                         <!--condition selection-->
                         <label for="selectCondition" class="control-label col-md-1 fontWeightNormal">Condition</label>
                         <div class="col-md-4">
@@ -111,14 +107,11 @@
                                 <option>---- Select Condition ----</option>
                             </select>
                         </div>
-
                         <div class="col-md-2">
                             <button class="col-md-12 fontWeightNormal" ng-click="vm.resetSearch()" id="resetBtn">Reset Search</button>
                         </div>
                     </div>
-
                     <div class="form-group row">
-
                         <!--brand selection-->
                         <label for="selectBrand" class="control-label col-md-1 fontWeightNormal">Brand</label>
                         <div class="col-md-4">
@@ -126,7 +119,6 @@
                                 <option>---- Select Brand ----</option>
                             </select>
                         </div>
-
                         <!--model selection-->
                         <label for="selectModel" class="control-label col-md-1 fontWeightNormal">Model</label>
                         <div class="col-md-4">
@@ -134,12 +126,10 @@
                                 <option>---- Select Model ----</option>
                             </select>
                         </div>
-
                         <div class="col-md-2">
                             <button class="col-md-12 fontWeightNormal" ng-click="vm.searchProducts()" id="btnSearchProducts">Search Products</button>
                         </div>
                     </div>
-
                     <!--error message-->
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -157,12 +147,11 @@
                 
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.editSalesOrderDisabled}}">
                 <legend style="font-size:medium;" id="productPanelHeading" class="panel-heading">Product search results</legend>
                 <div class="form-group row">
                     <div class="col-md-1"></div>
                     <div class="col-md-10" id="productsGridDiv">
-
                         <div class="row table-responsive">
                             <!--JS Data table -->
                             <table cellpadding="0" cellspacing="0" border="0" class="display table-condensed" id="productsGrid"></table>
@@ -179,7 +168,7 @@
 
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.editSalesOrderDisabled}}">
                 <legend style="font-size:medium;" class="panel-heading" id="orderDetailsPanelHeading">Order details</legend>
                 <div id="orderlinesSection">
                     <div class="form-group row">

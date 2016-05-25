@@ -176,8 +176,11 @@ namespace BCMY.WebAPI.Controllers
 
         /// Returns TblCustomerSupplier list based on contacts full name
         /// ful name = firstName + _ + lastname
-        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," +
-            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase)]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
         [HttpGet, ActionName("GetCustomerSuppliersByContactFulName")]
         public IEnumerable<TblCustomerSupplier> GetCustomerSuppliersByContactFulName(string contactFulName)
         {

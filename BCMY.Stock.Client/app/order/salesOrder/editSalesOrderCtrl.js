@@ -29,6 +29,8 @@
 
 
             wireCommands(vm, $http, contactResource, customerSupplierResource, $location);
+
+            authoriseEditSaledOrders(vm);
         }
         else {
             localStorage["userName"] = null;
@@ -155,6 +157,20 @@
         vm.performBacthOrderlineConfirm = function () {
             performBacthOrderlineConfirm($location, $http, vm);
         };
+    }
+
+    // authorise button access based on user roles
+    function authoriseEditSaledOrders(vm) {
+        debugger
+        if ($.trim(localStorage["userRolesList"]).indexOf('director') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1 ||
+            $.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1) {
+            vm.editSalesOrderDisabled = false;
+        }
+        else {
+            vm.editSalesOrderDisabled = true;
+        }
     }
 
     // used to perform default VAT selections
@@ -1560,6 +1576,7 @@
     
     // used to populate the product category drop down menu
     function populateCategoryDropDown($http, vm) {
+        debugger
         $http({
             method: "get",
             headers: vm.messageHeadersForEnc,

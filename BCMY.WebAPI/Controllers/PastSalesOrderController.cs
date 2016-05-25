@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using BCMY.WebAPI.Util;
 using DataAccess_EF.EntityFramework;
 using DataAccess_EF.ViewModels;
@@ -17,6 +18,7 @@ using System.Web.Http.Cors;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class PastSalesOrderController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -34,6 +36,7 @@ namespace BCMY.WebAPI.Controllers
         }
 
         // http://localhost:61945/api/PastSalesOrder?companyid=1&contactfulname=kumar_sangakkara&vat=YES&currency=1&orderDate=
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales)]
         [HttpGet, ActionName("CreateOrder")]
         public string CreatePastSalesOrder(int companyId, string contactFulName, string vat, int currency, DateTime orderDate)
         {

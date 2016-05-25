@@ -7,7 +7,7 @@
 
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.searchOrdersDisabled}}">
                 <legend style="font-size:medium;" class="panel-heading" id="customerHeaderPanel">Buyer / Seller information</legend>
                 <div id="customerSection">
                     <div class="form-group row">
@@ -40,10 +40,9 @@
 
         <div class="panel-body">
 
-            <fieldset>
+            <fieldset ng-disabled="{{vm.searchOrdersDisabled}}">
                 <legend style="font-size:medium;" class="panel-heading" id="orderSearchHeaderPanel">Order information</legend>
                 <div id="orderSection">
-
                     <div class="row">
                         <div class="col-md-2">
                             <label for="inputOrdrId" class="control-label fontWeightNormal">Order ID</label>
@@ -52,13 +51,11 @@
                             <input type="text" maxlength="6" placeholder="order ID" id="inputOrdrId" onkeypress="return isNumberKey(event)" />
                         </div>
                     </div>
-
                     <!--empty raw-->
                     <div class="row">
                         <div class="col-md-12">
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-2">
                             <label for="statusSelect" class="control-label fontWeightNormal">Order type</label>
@@ -71,13 +68,11 @@
                             </select>
                         </div>
                     </div>
-
                     <!--empty raw-->
                     <div class="row">
                         <div class="col-md-12">
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-2">
                             <label for="statusSelect" class="control-label fontWeightNormal">Status</label>
@@ -86,59 +81,46 @@
                             <select id="statusSelect"></select>
                         </div>
                     </div>
-
                     <!--empty raw-->
                     <div class="row">
                         <div class="col-md-12">
                         </div>
                     </div>
-
                     <!--from-to creation dates-->
                     <div class="row">
-
                         <div class="col-md-2">
                             <label for="dateFrom" class="control-label fontWeightNormal datePickerLbl">Creation date from</label>
                         </div>
                         <div class="col-md-4">
-
                             <div class="form-group">
                                 <input type="text" id="fromDatePicker" name="from">
                             </div>
-
                         </div>
-
                         <div class="col-md-2">
                             <label for="dateTo" class="control-label fontWeightNormal datePickerLbl">Creation date to</label>
                         </div>
                         <div class="col-md-4">
-
                             <div class="form-group">
                                 <input type="text" id="toDatePicker" name="to">
                             </div>
-
                         </div>
-
                     </div>
-
                     <!--empty raw-->
                     <div class="row">
                         <div class="col-md-12">
                         </div>
                     </div>
-
                     <!--error message-->
                     <div class="row">
                         <div class="col-md-12">
                             <label class="control-label fontWeightNormal" style="color:red" id="lblSearchError"></label>
                         </div>
                     </div>
-
                     <!--empty raw-->
                     <div class="row">
                         <div class="col-md-12">
                         </div>
                     </div>
-
                     <!--buttons -->
                     <div class="row">
                         <div class="col-md-5"></div>
@@ -153,7 +135,6 @@
                         <div class="col-md-2">
                         </div>
                     </div>
-
                 </div>
             </fieldset>
         </div>

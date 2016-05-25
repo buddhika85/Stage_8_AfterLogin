@@ -1,4 +1,5 @@
-﻿using BCMY.WebAPI.Models.UnityDI;
+﻿using BCMY.WebAPI.Controllers.admin;
+using BCMY.WebAPI.Models.UnityDI;
 using BCMY.WebAPI.Util;
 using DataAccess_EF.EntityFramework;
 using DataAccess_EF.ViewModels;
@@ -17,6 +18,7 @@ using System.Web.Http.Cors;
 namespace BCMY.WebAPI.Controllers
 {
     [EnableCors(origins: "https://localhost:44301", headers: "*", methods: "*")]
+    [Authorize]
     public class OrderController : ApiController
     {
         ObjectProvider objectProvider = null;
@@ -58,6 +60,7 @@ namespace BCMY.WebAPI.Controllers
         /// Returns a string message explaining the result
         /// http://localhost:61945/api/Order?orderId=25
         /// </summary>
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales)]
         [HttpGet, ActionName("DeleteOrder")]
         public string DeleteOrder(int deleteOrderId)
         {
@@ -120,7 +123,12 @@ namespace BCMY.WebAPI.Controllers
         ///  http://localhost:61945/api/order?companyId=1&contactFulName=kumar_sangakkara&orderId=1&status=0&orderType=0&creationDateFrom=null&creationDateTo=null
         /// </summary>
         //[HttpGet, ActionName("SearchOrders")]
-        [HttpGet, ActionName("SearchOrders")]
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales + "," +
+            CustomRoles.ManagementPurchase + "," + CustomRoles.ExecutivePurchase + "," + CustomRoles.AdministratorPurchase + "," +
+            CustomRoles.ManagementProduction + "," + CustomRoles.ExecutiveProduction + "," + CustomRoles.AdministratorProduction + "," +
+            CustomRoles.ManagementFinance + "," + CustomRoles.ExecutiveFinance + "," + CustomRoles.AdministratorFinance + "," +
+            CustomRoles.ManagementMarketing)]
+        [HttpGet, ActionName("SearchOrders")]        
         public IEnumerable<OrderViewModel> SearchOrders(int? companyId, string contactFulName, string orderId, string status,
             string orderType, string creationDateFrom, string creationDateTo)
         {
