@@ -75,6 +75,7 @@ namespace BCMY.WebAPI.Controllers
         /// Used to save a past negotiation/orderline
         /// </summary>
         /// http://localhost:61945/api/PastSalesOrder?productListId=107233&quantityVal=3&pricePerItem=5.0&totalAmountVal=15.0&statusVal=2&orderIdVal=47&=orderDate
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales)]
         [HttpGet, ActionName("SavePastOrderlineWithNegotiation")]
         public IList<OrderLineViewModel> SavePastOrderlineWithNegotiation(int productListId, decimal quantityVal, decimal pricePerItem, decimal totalAmountVal, int statusVal, int orderIdVal, DateTime orderDate)
         {
@@ -116,6 +117,7 @@ namespace BCMY.WebAPI.Controllers
         /// http://localhost:61945/api/orderline?orderId=25&orderlineId=125&deleteOrReject=del or
         /// http://localhost:61945/api/orderline?orderId=25&orderlineId=125&deleteOrReject=rej
         /// </summary>
+        [Authorize(Roles = CustomRoles.Director + "," + CustomRoles.ManagementSales + "," + CustomRoles.ExecutiveSales + "," + CustomRoles.AdministratorSales)]
         [HttpGet, ActionName("DeleteRejectOrderline")]
         public string DeletePastOrderline(string deleteOrReject, int orderlineId, int orderId)
         {

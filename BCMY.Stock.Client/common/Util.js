@@ -303,6 +303,12 @@
         }
 
         $("#searchSalesOrder").toggleClass('linkNotActive', $.trim(localStorage["userRolesList"]) == 'management-hr');
+
+        // disable for all roles and then enable if below roles are assigned    
+        $("#addPastSalesOrder").addClass('linkNotActive');
+        if ((($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1))) {
+            $("#addPastSalesOrder").removeClass('linkNotActive');
+        }
         
         //$("#addPastExchgRates").toggleClass('linkNotActive', (($.trim(localStorage["userRolesList"]).indexOf('director') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('management-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-sales') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-sales') > -1)
                                                                 //|| ($.trim(localStorage["userRolesList"]).indexOf('management-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('executive-purchase') > -1) || ($.trim(localStorage["userRolesList"]).indexOf('administrator-purchase') > -1)));

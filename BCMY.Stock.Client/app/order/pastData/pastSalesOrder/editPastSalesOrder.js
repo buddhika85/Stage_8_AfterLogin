@@ -16,6 +16,7 @@
             vm.messageHeadersForEnc = {
                 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': 'Bearer ' + localStorage["access_token"]
             };
+            vm.httpService = $http;
             vm.totalValue = "Total : £ 0.00";
             var searchObject = $location.search();                                                      // get order Id, that passed as query string
             var salesOrderId = searchObject.orderId;
@@ -43,27 +44,27 @@
         // BindDDLSelectionChangeCommands
         // on a company selection
         $('#selectCustSupp').change(function () {
-            onCompanyDDLSelection($http, contactResource);
+            onCompanyDDLSelection($http, contactResource, vm);
         });
 
         // on a contact name selection
         $('#selectContact').change(function () {
-            onContactDDLSelection($http, customerSupplierResource);
+            onContactDDLSelection($http, customerSupplierResource, vm);
         });
 
         // on product category selection change
         $('#selectCategory').change(function () {
-            onCategorySelection($http, $('#selectCategory'));
+            onCategorySelection($http, $('#selectCategory'), vm);
         });
 
         // on product condition selection change
         $('#selectCondition').change(function () {
-            onConditionSelection($http, $('#selectCondition'));
+            onConditionSelection($http, $('#selectCondition'),vm);
         });
 
         // on product brand selection change
         $('#selectBrand').change(function () {
-            onBrandSelection($http, $('#selectBrand'));
+            onBrandSelection($http, $('#selectBrand'), vm);
         });
 
         // on create order button click
@@ -71,7 +72,7 @@
             var isValid = ValidateCustContactSelections();
             //alert("validate customer and compnay selection then create a new order record in the database : " + isValid);
             if (isValid) {
-                CreateAnOrder($http);
+                CreateAnOrder($http, vm);
             }
         }
 
@@ -79,7 +80,7 @@
         vm.searchProducts = function () {
             DestroyTable();
             $('#productsGridDiv').removeClass('is-hidden');
-            SearchProducts($http);
+            SearchProducts($http, vm);
         }
         // on reset search button click        
         vm.resetSearch = function () {
@@ -109,7 +110,7 @@
         // save a negotiation
         vm.recordNegotiation = function () {
             //alert("record negotation");
-            RecordNegotiation($http);
+            RecordNegotiation($http, vm);
         };
 
         // insert an orderline
@@ -137,7 +138,7 @@
         vm.confirmOrder = function () {
             //alert("On confirm order button click -
             //make sure all orderlines are in confirmed status - update order record - reduce stock count");
-            confirmOrder($http);
+            confirmOrder($http, vm);
         }
 
         // reloads the same page with no scope variable data
@@ -190,7 +191,7 @@
         // perform the batch confirm -  confirm the order
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/OrderLine?orderId=' + orderId)
         })
         .success(function (data) {
@@ -198,7 +199,7 @@
                 // refersh the orderline grid
                 $http({
                     method: "get",
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: vm.messageHeadersForEnc,
                     url: ('https://localhost:44302/api/Orderline?orderIdVal=' + orderId),
                 }).success(function (dataOL) {
                     // redraw orderline grid and disable edit orderline and complete order buttons
@@ -239,7 +240,7 @@
                 var orderId = $('#orderId').val();
                 $http({
                     method: "get",
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: vm.messageHeadersForEnc,
                     url: ('https://localhost:44302/api/Order?orderId=' + orderId)
                 })
                 .success(function (data) {
@@ -322,7 +323,7 @@
         var contactFulName = $("#selectContact").val();
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/SalesOrder?companyId=' + companyId + '&contactFulName=' + contactFulName)
         })
         .success(function (data) {
@@ -429,7 +430,7 @@
             // populate dependant DDL - condition
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: ('https://localhost:44302/api/productinfo/categoryId?categoryId=' + selectedCategory),
             }).success(function (data) {
                 //alert(data.length);
@@ -466,7 +467,7 @@
         if (selectedCondition != -1 && selectedCategory != -1) {
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl,
             }).success(function (data) {
                 //alert(data.length);                
@@ -503,7 +504,7 @@
         if (selectedBrands != -1 && selectedCondition != -1 && selectedCategory != -1) {
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl,
             }).success(function (data) {
                 //alert(data.length);
@@ -556,7 +557,7 @@
             // repopulate the contact DDL based on company selection
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: ('https://localhost:44302/api/Contact?customerSupplierId=' + selectedValue),
             }).success(function (data) {
                 var listitems = '<option value=-1 selected="selected">---- Select Contact ----</option>';
@@ -593,7 +594,7 @@
             // repopulate the contact DDL based on company selection
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: ('https://localhost:44302/api/customerSupplier?contactFulName=' + selectedFulName),
             }).success(function (data) {
                 var listitems = '<option value=-1 selected="selected">---- Select Customer ----</option>';
@@ -625,8 +626,8 @@
         DisplayErrorMessage('', $('#lblErrorMessageCrtOrdr'));
         DisplayErrorMessage('', $('#lblErrorOrderLineMessage'));
 
-        populateCategoryDropDown($http);
-        populateStatusDropDown($http);
+        populateCategoryDropDown($http, vm);
+        populateStatusDropDown($http, vm);
         populateCurrencyDDL($http, vm);
 
         // enable product search form sections
@@ -646,7 +647,7 @@
         // get order by Id
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/SalesOrder?orderId=' + salesOrderId),
         }).success(function (data) {
             SelectBuyerSellerInfo(data);
@@ -665,7 +666,7 @@
         var orderlines = null;
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/Orderline?orderIdVal=' + order.id),
         }).success(function (data) {
             DrawOrderlineGrid(data, $http, vm);
@@ -772,7 +773,7 @@
         // get market value and stock count     
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/ProductInfo?productlistId=' + productListId),
         }).success(function (data) {
             if (data != null) {
@@ -842,8 +843,8 @@
 
         var newOrderId = $('#orderId').val();
         if (newOrderId != -1) {
-            GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId);
-            RefreshProductNegotiations($http, newOrderId, productListId);
+            GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId, vm);
+            RefreshProductNegotiations($http, newOrderId, productListId, vm);
         }
         else {
             DrawSuccessNegotiationsGrid(null, null);
@@ -859,10 +860,10 @@
     }
 
     // select status on edit orderline popup
-    function FindStatus($http, status) {
+    function FindStatus($http, status, vm) {
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/status'),
         }).success(function (data) {
             var listitems = '';
@@ -878,9 +879,9 @@
     }
 
     // Used to edit an existing orderline
-    function DisplayEditOrderLinePopup($http, productListId, category, condition, brand, model, marketValueGBP, stockCount, quantityAsked, negotiatedPricePerItem, totalAsked, status, selectedCurrency, marketValueSpecificCurr) {
+    function DisplayEditOrderLinePopup($http, productListId, category, condition, brand, model, marketValueGBP, stockCount, quantityAsked, negotiatedPricePerItem, totalAsked, status, selectedCurrency, marketValueSpecificCurr, vm) {
         // get status numeric value for selection 
-        FindStatus($http, status);
+        FindStatus($http, status, vm);
 
         // populate the popup
         $('#productListId').val(productListId);
@@ -906,8 +907,8 @@
 
         var newOrderId = $('#orderId').val();
         if (newOrderId != -1) {
-            GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId);
-            RefreshProductNegotiations($http, newOrderId, productListId);
+            GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId, vm);
+            RefreshProductNegotiations($http, newOrderId, productListId, vm);
         }
         else {
             DrawSuccessNegotiationsGrid(null, null);
@@ -923,13 +924,13 @@
     }
 
     // get previouse successful negotions for the same product but different order
-    function GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId) {
+    function GetPreiouseSuccessfullNegotiaions($http, newOrderId, productListId, vm) {
         var selectedCurrency = $('#selectCurrency option:selected').text().toUpperCase();
         var currentCompany = $('#selectCustSupp').find(":selected").text();
         var serverUrl = 'https://localhost:44302/api/Negotiation?orderId=' + newOrderId + '&productListId=' + productListId + '&confirmed=true' + '&custSupName=' + currentCompany + '&count=3&selectedCurrency=' + selectedCurrency;
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             DrawSuccessNegotiationsGrid(data, currentCompany);                              // previouse successful negotiations in other orders            
@@ -987,7 +988,7 @@
 
 
     // used to record a negotation
-    function RecordNegotiation($http) {
+    function RecordNegotiation($http, vm) {
         var isValid = ValidateNegotiation();
         if (isValid) {
             // disable negotiation form fields
@@ -1003,9 +1004,10 @@
 
             var serverUrl = 'https://localhost:44302/api/Negotiation?productListId=' + productListId + '&quantityVal=' + quantityVal + '&pricePerItem=' + pricePerItem
                 + '&totalAmountVal=' + totalAmountVal + '&status=' + status + '&orderIdVal=' + orderId;
+            debugger
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl
             }).success(function (data) {
                 if (data == 'success') {
@@ -1018,7 +1020,7 @@
                     CleanNegotiationForm();
 
                     // Refresh negotiations table
-                    RefreshProductNegotiations($http, orderId, productListId);
+                    RefreshProductNegotiations($http, orderId, productListId, vm);
                 }
                 else {
                     DisplayErrorMessage('error - saving data - record negotiation - please contact IT helpdesk', $('#lblErrorManageNegotiation'));
@@ -1037,12 +1039,12 @@
     }
 
     // Refreshing the negotiations 
-    function RefreshProductNegotiations($http, orderId, productListId) {
+    function RefreshProductNegotiations($http, orderId, productListId, vm) {
 
         var serverUrl = 'https://localhost:44302/api/Negotiation?orderId=' + orderId + '&productListId=' + productListId;
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             if (data != null && data.length > 0) {
@@ -1117,7 +1119,7 @@
 
             $http({
                 method: "get",
-                headers: { 'Content-Type': 'application/json' },
+                headers: vm.messageHeadersForEnc,
                 url: serverUrl
             }).success(function (data) {
                 if (data != null) {
@@ -1224,21 +1226,21 @@
             $('#orderGrid tbody').on('click', 'button.businessEdit', function () {
                 var dataRow = table.row($(this).parents('tr')).data();
                 //alert("View Info : " + data.productlistId + " - " + data.model);
-                OnOrderLineEditBtnClick(dataRow, $http);
+                OnOrderLineEditBtnClick(dataRow, $http, vm);
             });
             // on reject button clicks
             $('#orderGrid tbody').on('click', 'button.businessReject', function () {
                 var row = $(this).parents('tr');
                 var dataRow = table.row($(this).parents('tr')).data();
                 //alert("View Info : " + data.productlistId + " - " + data.model);
-                OnOrderLineRejectBtnClick(row, dataRow, $http);
+                OnOrderLineRejectBtnClick(row, dataRow, $http, vm);
             });
             // on delete button clicks
             $('#orderGrid tbody').on('click', 'button.businessDelete', function () {
                 var row = $(this).parents('tr');
                 var dataRow = table.row($(this).parents('tr')).data();
                 //alert("View Info : " + data.productlistId + " - " + data.model);
-                OnOrderLineDeleteBtnClick(row, dataRow, $http);
+                OnOrderLineDeleteBtnClick(row, dataRow, $http, vm);
             });
         }
         //else {
@@ -1249,7 +1251,7 @@
     }
 
     // reject orderline
-    function OnOrderLineRejectBtnClick(row, dataRow, $http) {
+    function OnOrderLineRejectBtnClick(row, dataRow, $http, vm) {
         bootbox.dialog({
             message: "Are you sure that you want to reject orderline " + dataRow.id + " of " + dataRow.orderId + " ?",
             title: "Confirm Order Deletion",
@@ -1265,7 +1267,7 @@
                     label: "Yes",
                     className: "btn-primary",
                     callback: function () {
-                        DeleteRejectOrderline($http, 'rej', dataRow.id, dataRow.orderId, row);
+                        DeleteRejectOrderline($http, 'rej', dataRow.id, dataRow.orderId, row, vm);
                     }
                 }
             }
@@ -1273,7 +1275,7 @@
     }
 
     // delete orderline
-    function OnOrderLineDeleteBtnClick(row, dataRow, $http) {
+    function OnOrderLineDeleteBtnClick(row, dataRow, $http, vm) {
         bootbox.dialog({
             message: "Are you sure that you want to delete orderline " + dataRow.id + " of " + dataRow.orderId + " ?",
             title: "Confirm Order Deletion",
@@ -1289,7 +1291,7 @@
                     label: "Yes",
                     className: "btn-primary",
                     callback: function () {
-                        DeleteRejectOrderline($http, 'del', dataRow.id, dataRow.orderId, row);
+                        DeleteRejectOrderline($http, 'del', dataRow.id, dataRow.orderId, row, vm);
                     }
                 }
             }
@@ -1297,11 +1299,11 @@
     }
 
     // used to make server call to delete or reject an orderline
-    function DeleteRejectOrderline($http, deleteOrReject, orderlineId, orderId, row) {
+    function DeleteRejectOrderline($http, deleteOrReject, orderlineId, orderId, row, vm) {
         var serverUrl = 'https://localhost:44302/api/pastsalesorder?orderId=' + orderId + '&orderlineId=' + orderlineId + '&deleteOrReject=' + deleteOrReject;
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             debugger;
@@ -1350,7 +1352,7 @@
     }
 
     // edit orderline
-    function OnOrderLineEditBtnClick(dataRow, $http) {
+    function OnOrderLineEditBtnClick(dataRow, $http, vm) {
         RemoveOutlineBordersNegForm();
         //alert('Edit order line id : ' + dataRow.id);
         var selectedCurrency = $('#selectCurrency option:selected').text().toUpperCase();
@@ -1358,11 +1360,11 @@
         DisplayErrorMessage('', $('#lblErrorOrderLineMessage'));
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             DisplayEditOrderLinePopup($http, data.productId, data.category, data.condition, data.brand, data.model, data.marketvalueGBP, data.stockCount,
-                            dataRow.quantity, dataRow.negotiatedPricePerItem, dataRow.totalAmount, data.status, selectedCurrency, data.marketValueSpecificCurr);
+                            dataRow.quantity, dataRow.negotiatedPricePerItem, dataRow.totalAmount, data.status, selectedCurrency, data.marketValueSpecificCurr, vm);
         }
         ).error(function (data) {
             // display error message
@@ -1458,7 +1460,7 @@
                 '&conditionId=' + conditionId + '&brandIds=' + brandIds + '&modelIds=' + modelIds;
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: serverUrl
         }).success(function (data) {
             //alert('search result length : ' + data.length); 
@@ -1501,10 +1503,10 @@
     }
 
     // used to populate the product category drop down menu
-    function populateCategoryDropDown($http) {
+    function populateCategoryDropDown($http, vm) {
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/productinfo/getcategories?getcategories=true'),
         }).success(function (data) {
             var listitems = '<option value=-1 selected="selected">---- Select Category ----</option>';
@@ -1549,11 +1551,11 @@
     }
 
     // used to populate status ddl
-    function populateStatusDropDown($http) {
+    function populateStatusDropDown($http, vm) {
 
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/status'),
         }).success(function (data) {
             var listitems = '';
@@ -1588,7 +1590,7 @@
 
         $http({
             method: "get",
-            headers: { 'Content-Type': 'application/json' },
+            headers: vm.messageHeadersForEnc,
             url: ('https://localhost:44302/api/currency'),
         }).success(function (data) {
             var listitems = '';
